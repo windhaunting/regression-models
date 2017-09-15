@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Sep 15 00:18:46 2017
+
+@author: fubao
+"""
+
+'''
+file related operation here
+read input and write input operation
+'''
+
+
+    
+# Read in train and test data
+def readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest):
+	#print('Reading power plant dataset ...')
+    
+	train_x = np.loadtxt(fileNameTrain)
+	train_y = np.loadtxt(fileNameTrainLabel)
+	test_x = np.loadtxt(fileTest)
+
+	return (train_x, train_y, test_x)
+
+
+
