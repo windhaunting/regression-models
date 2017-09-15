@@ -11,9 +11,9 @@ file related operation here
 read input and write input operation
 '''
 
-
+import numpy as np
     
-# Read in train and test data
+# Read in train and test data from files
 def readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest):
 	#print('Reading power plant dataset ...')
     
@@ -22,6 +22,7 @@ def readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest):
 	test_x = np.loadtxt(fileTest)
 
 	return (train_x, train_y, test_x)
+
 
 
 
