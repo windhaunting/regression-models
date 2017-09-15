@@ -2,6 +2,14 @@
 import numpy as np
 import kaggle
 
+
+class predictLR:
+ 
+    
+    def __init__(self):
+      pass
+
+
 # Read in train and test data
 def read_data_power_plant():
 	print('Reading power plant dataset ...')
