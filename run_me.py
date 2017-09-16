@@ -21,16 +21,13 @@ class clsregressionHw(object):
         fileTest = '../../Data/PowerOutput/data_test.txt'
         train_x, train_y, test_x = readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest)
                 
+        print (" power data shape: ", train_x.shape, train_y.shape, test_x.shape)
 
         return (train_x, train_y, test_x)
     
+    
     def read_data_localization_indoors(self):
-        print('Reading indoor localization dataset ...')
-        train_x = np.loadtxt('../../Data/IndoorLocalization/data_train.txt')
-        train_y = np.loadtxt('../../Data/IndoorLocalization/labels_train.txt')
-        test_x = np.loadtxt('../../Data/IndoorLocalization/data_test.txt')
-        
-        return (train_x, train_y, test_x)
+        x = 1
     
     # Compute MAE
     def compute_error(y_hat, y):
