@@ -14,29 +14,28 @@ class clsregressionHw(object):
     # Read in train and test data
     def read_data_power_plant(self):
         
-        
-     #transferNPtoDataframe():
+        #transferNPtoDataframe():
+        print('Reading power plant dataset ...')
+        fileNameTrain = '../../Data/PowerOutput/data_train.txt'
+        fileNameTrainLabel = '../../Data/PowerOutput/labels_train.txt'
+        fileTest = '../../Data/PowerOutput/data_test.txt'
+        train_x, train_y, test_x = readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest)
+                
 
-            
-    	print('Reading power plant dataset ...')
-    	train_x = np.loadtxt('../../Data/PowerOutput/data_train.txt')
-    	train_y = np.loadtxt('../../Data/PowerOutput/labels_train.txt')
-    	test_x = np.loadtxt('../../Data/PowerOutput/data_test.txt')
-    
-    	return (train_x, train_y, test_x)
+        return (train_x, train_y, test_x)
     
     def read_data_localization_indoors(self):
-    	print('Reading indoor localization dataset ...')
-    	train_x = np.loadtxt('../../Data/IndoorLocalization/data_train.txt')
-    	train_y = np.loadtxt('../../Data/IndoorLocalization/labels_train.txt')
-    	test_x = np.loadtxt('../../Data/IndoorLocalization/data_test.txt')
-    
-    	return (train_x, train_y, test_x)
+        print('Reading indoor localization dataset ...')
+        train_x = np.loadtxt('../../Data/IndoorLocalization/data_train.txt')
+        train_y = np.loadtxt('../../Data/IndoorLocalization/labels_train.txt')
+        test_x = np.loadtxt('../../Data/IndoorLocalization/data_test.txt')
+        
+        return (train_x, train_y, test_x)
     
     # Compute MAE
     def compute_error(y_hat, y):
-    	# mean absolute error
-    	return np.abs(y_hat - y).mean()
+        	# mean absolute error
+        return np.abs(y_hat - y).mean()
 
 ############################################################################
 
