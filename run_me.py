@@ -2,6 +2,7 @@
 import numpy as np
 import kaggle
 
+from fileCommon import readTrainTestData
 
 class clsregressionHw(object):
  
@@ -12,6 +13,11 @@ class clsregressionHw(object):
 
     # Read in train and test data
     def read_data_power_plant(self):
+        
+        
+     #transferNPtoDataframe():
+
+            
     	print('Reading power plant dataset ...')
     	train_x = np.loadtxt('../../Data/PowerOutput/data_train.txt')
     	train_y = np.loadtxt('../../Data/PowerOutput/labels_train.txt')
