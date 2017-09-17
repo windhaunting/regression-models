@@ -3,7 +3,12 @@ import numpy as np
 import kaggle
 
 from filesCommon import readTrainTestData
-from preprocessing import preprocessNANMethod
+#from preprocessing import preprocessNANMethod
+from preprocessing import preprocessNormalize
+from preprocessing import preprocessStandardScaler
+
+
+
 class clsregressionHw(object):
  
     
@@ -19,19 +24,26 @@ class clsregressionHw(object):
         fileNameTrain = '../../Data/PowerOutput/data_train.txt'
         fileNameTrainLabel = '../../Data/PowerOutput/labels_train.txt'
         fileTest = '../../Data/PowerOutput/data_test.txt'
-        train_x, train_y, test_x = readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest)
+        trainX, trainY, testX = readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest)
                 
-        print (" power data shape: ", train_x.shape, train_y.shape, test_x.shape)
+        print (" power data shape: ", trainX.shape, trainY.shape, testX.shape)
 
-        return (train_x, train_y, test_x)
+        return (trainX, trainY, testX)
     
     
-    
+    #execute power plant train to get model
     def executeTrain(self):
-        x = 1
-        train_x, train_y, test_x = self.read_data_power_plant()
-        preprocessNANMethod(train_x)
-    
+        trainX, trainY, testX = self.read_data_power_plant()
+        #preprocessNANMethod(train_x)
+        #trainX = preprocessTransform(trainX)
+        trainX = preprocessNormalize(trainX)
+
+        print ("train X: ", trainX)
+        
+        trainY = preprocessNormalize(trainY)
+        print ("train Y: ", trainY)
+        
+        
     def read_data_localization_indoors(self):
         x = 1
     

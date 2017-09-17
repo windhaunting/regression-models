@@ -7,6 +7,7 @@ Created on Thu Sep  14 10:49:40 2017
 """
 #import pandas as pd
 import numpy as np
+from numpy import log1p
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
@@ -32,14 +33,14 @@ def preprocessTransform(array):
     transArray = FunctionTransformer(log1p).fit_transform(array)
     return transArray
     
-def preprocessScaler(array):
-    #Transforms features by scaling each feature to a given range.
-    # Standardize features by removing the mean and scaling to unit variance
-    stanScalerArray = StandardScaler().fit_transform(array)
-    #print("standard scaler: ", df.mean_)
-    #df = pd.DataFrame(scaled_features, index=df.index, columns=df.columns)
 
+#    #Transforms features by scaling each feature to a given range.
+
+def preprocessNormalize(array):
     #Transforms features by scaling each feature to a given range.
-    rangeScalerArray = MinMaxScaler().fit_transform(stanScalerArray)
+    return MinMaxScaler().fit_transform(stanScalerArray)
     
-    return rangeScalerArray
+# Standardize features by removing the mean and scaling to unit variance
+def preprocessStandardScaler(array):
+    return = StandardScaler().fit_transform(array)
+
