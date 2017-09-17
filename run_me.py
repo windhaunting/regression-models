@@ -2,7 +2,7 @@
 import numpy as np
 import kaggle
 
-from fileCommon import readTrainTestData
+from filesCommon import readTrainTestData
 
 class clsregressionHw(object):
  
@@ -46,6 +46,7 @@ def main():
     print('Train=', train_x.shape)
     print('Test=', test_x.shape)
     
+    '''
     train_x, train_y, test_x = regrHwObj.read_data_localization_indoors()
     print('Train=', train_x.shape)
     print('Test=', test_x.shape)
@@ -57,7 +58,8 @@ def main():
     # Writing output in Kaggle format
     print('Writing output to ', file_name)
     kaggle.kaggleize(predicted_y, file_name)
-
+    '''
+    
 
 if __name__== "__main__":
   main()

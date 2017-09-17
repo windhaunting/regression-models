@@ -10,6 +10,7 @@ Created on Fri Sep 15 00:18:46 2017
 file related operation here
 read input and write input operation
 '''
+import csv
 
 import numpy as np
     
@@ -25,6 +26,10 @@ def readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest):
 
 
 
-
+#write column wise file into file
+def 	writeFileColumnwise(filePath, columnNameLst, columnsValues):
     
+    writer = csv.writer(open(filePath, 'w'))
+    writer.writerow(columnNameLst)
+    writer.writerows(columnsValues)
 
