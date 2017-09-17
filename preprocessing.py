@@ -5,7 +5,8 @@ Created on Thu Sep  14 10:49:40 2017
 
 @author: fubao
 """
-import pandas as pd
+#import pandas as pd
+import numpy as np
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
@@ -15,22 +16,20 @@ from sklearn.preprocessing import Imputer
 from sklearn.preprocessing import FunctionTransformer
 
 
-#process missing value here
+'''
+#check if there is None or NaN value process missing value here
 def preprocessNANMethod(npArray):
     #drop rows with all NaN
-    npArray = npArray.dropna(axis=0, how='all', thresh=2)       #Keep only the rows with at least 2 non-na values:
-    imputedArray = Imputer(missing_values="NaN", strategy='mean').fit_transform(npArray)
-    
-    #df = pd.DataFrame(imputedArray, index=df.index, columns=df.columns)
-    #fill na
-    
-    return imputedArray
+    #print (np.equal(npArray, None))
+    s = pd.DataFrame(npArray)
+    print(s.isnull().values.any())
+'''
+
 
 #data transform, polynomial, log or exponential. etc.
 def preprocessTransform(array):
     
     transArray = FunctionTransformer(log1p).fit_transform(array)
-
     return transArray
     
 def preprocessScaler(array):

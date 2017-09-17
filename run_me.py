@@ -3,7 +3,7 @@ import numpy as np
 import kaggle
 
 from filesCommon import readTrainTestData
-
+from preprocessing import preprocessNANMethod
 class clsregressionHw(object):
  
     
@@ -26,6 +26,12 @@ class clsregressionHw(object):
         return (train_x, train_y, test_x)
     
     
+    
+    def executeTrain(self):
+        x = 1
+        train_x, train_y, test_x = self.read_data_power_plant()
+        preprocessNANMethod(train_x)
+    
     def read_data_localization_indoors(self):
         x = 1
     
@@ -41,10 +47,8 @@ class clsregressionHw(object):
 def main():
     
     regrHwObj = clsregressionHw()
-    
-    train_x, train_y, test_x = regrHwObj.read_data_power_plant()
-    print('Train=', train_x.shape)
-    print('Test=', test_x.shape)
+
+    regrHwObj.executeTrain()
     
     '''
     train_x, train_y, test_x = regrHwObj.read_data_localization_indoors()
