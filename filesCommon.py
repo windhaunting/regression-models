@@ -24,10 +24,10 @@ def readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest):
 	return (train_x, train_y, test_x)
 
 
-
+'''
 #write column wise file into file
-def 	writeFileColumnwise(filePath, columnNameLst, columnsValues):
+def 	writeFileColumnwiseToKaggle(filePath, columnNameLst, columnsValues):
     writer = csv.writer(open(filePath, 'w'))
     writer.writerow(columnNameLst)
     writer.writerows(columnsValues)
-
+'''

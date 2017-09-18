@@ -1,8 +1,10 @@
 # Import python modules
 import numpy as np
-import kaggle
+from kaggle import kaggleize
 
 from filesCommon import readTrainTestData
+from filesCommon import writeFileColumnwiseToKaggle
+
 from preprocessing import preprocessNANMethod
 from preprocessing import preprocessNormalize
 from preprocessing import preprocessStandardScaler
@@ -59,8 +61,18 @@ class clsregressionHw(object):
         averageMAE  = sumMAE/k
         return averageMAE
     
+    # use whole train data to do train and then test
+    def trainTestWholeData(self, trainX, trainY, testX, modelFunc, *parameters):
+        model =  modelFunc(*parameters)
+        model.fit(trainX, trainY)
+            
+        #print ("parameter: ", neigh.get_params(deep=True))
+        predY = model.predict(testX)
+        
+        return predY
+        
     #execute power plant train to get model
-    def executeTrainPowerPlant(self):
+    def executeTrainPowerPlant(self, fileTestOutput):
         trainX, trainY, testX = self.readDataPowerPlant()
         #trainX = preprocessNANMethod(trainX)
         #trainX = preprocessTransform(trainX)
@@ -68,15 +80,24 @@ class clsregressionHw(object):
         #print ("train X: ", trainX)
         print ("train Y: ", trainY)
 
-        knnNeighbors = range(1, 20)     #[1,2,3,4,5,6,7]
+        knnNeighbors = range(1, 20)              #[1,2,3,4,5,6,7]
         i = 0
+        smallestMAE = 1.0
+        bestNNeighbor = 0
         for nNeighbor in knnNeighbors:
             averageMAE = self.modelSelectionCV(trainX, trainY, KNeighborsRegressor, nNeighbor)
-            i +=1
-            print ("averageMAE cv MAE error: ",averageMAE)
-
+            i += 1
+            print ("averageMAE cv MAE error: ", averageMAE)
+            if averageMAE < smallestMAE:
+                smallestMAE = averageMAE
+                bestNNeighbor = nNeighbor
         
-
+        print (" bestNNeighbor: ", bestNNeighbor)
+        predY = trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
+        
+        #output to file
+        fileTestOutput , columnNameLst, columnsValues):
+        writeFileColumnwiseToKaggle()
     # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
         x = 1
@@ -98,7 +119,11 @@ def main():
     
     regrHwObj = clsregressionHw()
 
+
+    
     regrHwObj.executeTrainPowerPlant()
+    
+    
     
     '''
     train_x, train_y, test_x = regrHwObj.readDataPowerPlant()
