@@ -6,7 +6,7 @@ from filesCommon import readTrainTestData
 from preprocessing import preprocessNANMethod
 from preprocessing import preprocessNormalize
 from preprocessing import preprocessStandardScaler
-
+from sklearn.neighbors import KNeighborsRegressor
 
 
 class clsregressionHw(object):
@@ -17,7 +17,7 @@ class clsregressionHw(object):
 
 
     # Read in train and test data
-    def read_data_power_plant(self):
+    def readDataPowerPlant(self):
         
         #transferNPtoDataframe():
         print('Reading power plant dataset ...')
@@ -32,23 +32,27 @@ class clsregressionHw(object):
     
     
     #execute power plant train to get model
-    def executeTrain(self):
-        trainX, trainY, testX = self.read_data_power_plant()
+    def executeTrainPowerPlant(self):
+        trainX, trainY, testX = self.readDataPowerPlant()
         #trainX = preprocessNANMethod(trainX)
         #trainX = preprocessTransform(trainX)
         trainX = preprocessNormalize(trainX)
-
-        print ("train X: ", trainX)
+        #print ("train X: ", trainX)
+        print ("train Y: ", trainY)
+        neigh = KNeighborsRegressor(n_neighbors=5)
+        neigh.fit(trainX, trainY)
         
-        trainY = preprocessNormalize(trainY)
-        #print ("train Y: ", trainY)
-        
+        print ("parameter: ", neigh.get_params(deep=True))
+        predY = neigh.predict(trainX)
+        print ("predY: ", predY)
+        mAE =  self.computeMAEError(predY, trainY)
+        print ("trained MAE error: ", mAE)
         
     def read_data_localization_indoors(self):
         x = 1
     
     # Compute MAE
-    def compute_error(y_hat, y):
+    def computeMAEError(self, y_hat, y):
         	# mean absolute error
         return np.abs(y_hat - y).mean()
 
@@ -60,10 +64,10 @@ def main():
     
     regrHwObj = clsregressionHw()
 
-    regrHwObj.executeTrain()
+    regrHwObj.executeTrainPowerPlant()
     
     '''
-    train_x, train_y, test_x = regrHwObj.read_data_localization_indoors()
+    train_x, train_y, test_x = regrHwObj.readDataPowerPlant()
     print('Train=', train_x.shape)
     print('Test=', test_x.shape)
     

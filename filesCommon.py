@@ -17,7 +17,6 @@ import numpy as np
 # Read in train and test data from files
 def readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest):
 	#print('Reading power plant dataset ...')
-    
 	train_x = np.loadtxt(fileNameTrain)
 	train_y = np.loadtxt(fileNameTrainLabel)
 	test_x = np.loadtxt(fileTest)
@@ -28,7 +27,6 @@ def readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest):
 
 #write column wise file into file
 def 	writeFileColumnwise(filePath, columnNameLst, columnsValues):
-    
     writer = csv.writer(open(filePath, 'w'))
     writer.writerow(columnNameLst)
     writer.writerows(columnsValues)
