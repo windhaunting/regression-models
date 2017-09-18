@@ -6,9 +6,11 @@ from filesCommon import readTrainTestData
 
 from preprocessing import preprocessNANMethod
 from preprocessing import preprocessNormalize
+from preprocessing import preprocessTransform
 from preprocessing import preprocessStandardScaler
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import KFold
+from sklearn.linear_model import Ridge
 
 class clsregressionHw(object):
  
@@ -35,9 +37,8 @@ class clsregressionHw(object):
      
     
     # select model parameter by using CV
-    def modelSelectionCV(self, trainX, trainY, modelFunc, *parameters):
+    def modelSelectionCV(self, trainX, trainY, k, modelFunc, *parameters):
 
-        k = 10
         kf = KFold(n_splits=k)
         averageMAE = 0.0
         sumMAE = 0.0
@@ -70,21 +71,25 @@ class clsregressionHw(object):
         
         return predY
         
-    #execute power plant train to get model
-    def executeTrainPowerPlant(self, fileTestOutput):
+    #execute power plant train to get model parameter of KNN
+    def executeTrainPowerPlantKNN(self, fileTestOutputKNN):
         trainX, trainY, testX = self.readDataPowerPlant()
-        #trainX = preprocessNANMethod(trainX)
-        trainX = preprocessTransform(trainX)
-        #trainX = preprocessNormalize(trainX)
+        #trainX = preprocessNANMethod(trainX)           #not working
+        #trainX = preprocessTransform(trainX)           #not working
+        #trainX = preprocessNormalize(trainX)           #not working
+        #trainX = preprocessStandardScaler(trainX)      #might work
         #print ("train X: ", trainX)
         print ("train Y: ", trainY)
 
+
+        #use  k nearest neighbor knn
         knnNeighbors = range(1, 20)              #[1,2,3,4,5,6,7]
         i = 0
         smallestMAE = 1.0
         bestNNeighbor = 0
         for nNeighbor in knnNeighbors:
-            averageMAE = self.modelSelectionCV(trainX, trainY, KNeighborsRegressor, nNeighbor)
+            k = 10
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, KNeighborsRegressor, nNeighbor)
             i += 1
             print ("averageMAE cv MAE error: ", averageMAE)
             if averageMAE < smallestMAE:
@@ -95,8 +100,34 @@ class clsregressionHw(object):
         predY = self.trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
         print ("predY : ", predY)
         #output to file
-        kaggleize(predY, fileTestOutput)
+        kaggleize(predY, fileTestOutputKNN)
         
+       
+        
+    #execute linear regression powerPlant      
+    def executeTrainPowerPlantLR(self, fileTestOutputLR):
+        trainX, trainY, testX = self.readDataPowerPlant()
+        
+        alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]
+
+        smallestMAE = 1.0
+        bestAlpha = 0
+        
+        for alpha in alphaLst:
+            k = 10
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha)
+            print ("averageMAE cv MAE error: ", averageMAE)
+            if averageMAE < smallestMAE:
+                smallestMAE = averageMAE
+                bestAlpha = alpha
+        
+        print (" bestAlpha: ", bestAlpha)
+        predY = self.trainTestWholeData(trainX, trainY, testX, Ridge, bestAlpha)
+        print ("predY : ", predY)
+        #output to file
+        kaggleize(predY, fileTestOutputLR)
+    
+    
     
     # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
@@ -120,9 +151,11 @@ def main():
     regrHwObj = clsregressionHw()
 
 
-    fileTestOuput  = "../Predictions/PowerOutput/best.csv"
-    regrHwObj.executeTrainPowerPlant(fileTestOuput)
-    
+    fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
+    fileTestOutputLR  = "../Predictions/PowerOutput/best_lr.csv"
+
+    regrHwObj.executeTrainPowerPlantKNN(fileTestOutputKNN)
+    regrHwObj.executeTrainPowerPlantLR(fileTestOutputLR)
     
     
     '''
