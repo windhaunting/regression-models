@@ -3,7 +3,7 @@ import numpy as np
 import kaggle
 
 from filesCommon import readTrainTestData
-#from preprocessing import preprocessNANMethod
+from preprocessing import preprocessNANMethod
 from preprocessing import preprocessNormalize
 from preprocessing import preprocessStandardScaler
 
@@ -34,14 +34,14 @@ class clsregressionHw(object):
     #execute power plant train to get model
     def executeTrain(self):
         trainX, trainY, testX = self.read_data_power_plant()
-        #preprocessNANMethod(train_x)
+        #trainX = preprocessNANMethod(trainX)
         #trainX = preprocessTransform(trainX)
         trainX = preprocessNormalize(trainX)
 
         print ("train X: ", trainX)
         
         trainY = preprocessNormalize(trainY)
-        print ("train Y: ", trainY)
+        #print ("train Y: ", trainY)
         
         
     def read_data_localization_indoors(self):
