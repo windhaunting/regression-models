@@ -7,7 +7,7 @@ from preprocessing import preprocessNANMethod
 from preprocessing import preprocessNormalize
 from preprocessing import preprocessStandardScaler
 from sklearn.neighbors import KNeighborsRegressor
-
+from sklearn.model_selection import KFold
 
 class clsregressionHw(object):
  
@@ -41,22 +41,23 @@ class clsregressionHw(object):
         print ("train Y: ", trainY)
         
         #select the model 
-        kf = KFold(n_splits=2)
-        for trainIndex, testIndex in kf.split(X):
-            print("TRAIN:", trainIndex, "TEST:", testIndex)
+        kf = KFold(n_splits=14)
+        i = 0
+        for trainIndex, testIndex in kf.split(trainX):
+            #print("TRAIN:", trainIndex, "TEST:", testIndex)
             xSplitTrain, XSplitTest = trainX[trainIndex], trainX[testIndex]
             ySplitTrain, ySplitTest = trainY[trainIndex], trainY[testIndex]
-
-        neigh = KNeighborsRegressor(n_neighbors=5)
-        
-        neigh.fit(trainX, trainY)
-        
-        print ("parameter: ", neigh.get_params(deep=True))
-        predY = neigh.predict(trainX)
-        print ("predY: ", predY)
-        mAE =  self.computeMAEError(predY, trainY)
-        print ("trained MAE error: ", mAE)
-        
+            
+            neigh = KNeighborsRegressor(n_neighbors=5)
+            
+            neigh.fit(xSplitTrain, ySplitTrain)
+            
+            #print ("parameter: ", neigh.get_params(deep=True))
+            predYSplitTest = neigh.predict(XSplitTest)
+            #print ("predYSplitTest : ", predYSplitTest)
+            mAE =  self.computeMAEError(predYSplitTest, ySplitTest)
+            print ("trained MAE error: ",i, mAE)
+            i +=1
     def read_data_localization_indoors(self):
         x = 1
     
