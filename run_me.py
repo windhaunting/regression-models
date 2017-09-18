@@ -39,7 +39,16 @@ class clsregressionHw(object):
         trainX = preprocessNormalize(trainX)
         #print ("train X: ", trainX)
         print ("train Y: ", trainY)
+        
+        #select the model 
+        kf = KFold(n_splits=2)
+        for trainIndex, testIndex in kf.split(X):
+            print("TRAIN:", trainIndex, "TEST:", testIndex)
+            xSplitTrain, XSplitTest = trainX[trainIndex], trainX[testIndex]
+            ySplitTrain, ySplitTest = trainY[trainIndex], trainY[testIndex]
+
         neigh = KNeighborsRegressor(n_neighbors=5)
+        
         neigh.fit(trainX, trainY)
         
         print ("parameter: ", neigh.get_params(deep=True))
