@@ -41,14 +41,19 @@ class clsregressionHw(object):
         print ("train Y: ", trainY)
         
         #select the model 
-        kf = KFold(n_splits=14)
+        
+        nNeighbors = 5
+        k = 14
+        kf = KFold(n_splits=k)
         i = 0
+        averageMAE = 0.0
+        sumMAE = 0.0
         for trainIndex, testIndex in kf.split(trainX):
             #print("TRAIN:", trainIndex, "TEST:", testIndex)
             xSplitTrain, XSplitTest = trainX[trainIndex], trainX[testIndex]
             ySplitTrain, ySplitTest = trainY[trainIndex], trainY[testIndex]
             
-            neigh = KNeighborsRegressor(n_neighbors=5)
+            neigh = KNeighborsRegressor(n_neighbors=nNeighbors)
             
             neigh.fit(xSplitTrain, ySplitTrain)
             
@@ -56,8 +61,12 @@ class clsregressionHw(object):
             predYSplitTest = neigh.predict(XSplitTest)
             #print ("predYSplitTest : ", predYSplitTest)
             mAE =  self.computeMAEError(predYSplitTest, ySplitTest)
-            print ("trained MAE error: ",i, mAE)
+            print ("cv MAE error: ",i, mAE)
+            
+            sumMAE += mAE
             i +=1
+        averageMAE  = sumMAE/k
+        print ("averageMAE cv MAE error: ",averageMAE)
     def read_data_localization_indoors(self):
         x = 1
     
