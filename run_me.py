@@ -34,11 +34,10 @@ class clsregressionHw(object):
      
     
     # select model parameter by using CV
-    def modelSelectionCV(self, modelFunc, *parameters):
-        
+    def modelSelectionCV(self, trainX, trainY, modelFunc, *parameters):
+
         k = 10
         kf = KFold(n_splits=k)
-        i = 0
         averageMAE = 0.0
         sumMAE = 0.0
         for trainIndex, testIndex in kf.split(trainX):
@@ -47,20 +46,18 @@ class clsregressionHw(object):
             ySplitTrain, ySplitTest = trainY[trainIndex], trainY[testIndex]
             
             #neigh = KNeighborsRegressor(n_neighbors=nNeighbor)
-            model =  modelFunc(parameters)
-            neigh.fit(xSplitTrain, ySplitTrain)
+            model =  modelFunc(*parameters)
+            model.fit(xSplitTrain, ySplitTrain)
             
             #print ("parameter: ", neigh.get_params(deep=True))
-            predYSplitTest = neigh.predict(XSplitTest)
+            predYSplitTest = model.predict(XSplitTest)
             #print ("predYSplitTest : ", predYSplitTest)
             mAE =  self.computeMAEError(predYSplitTest, ySplitTest)
             #print ("cv MAE error: ",i, mAE)
-            
             sumMAE += mAE
-            i +=1
+
         averageMAE  = sumMAE/k
-            print ("averageMAE cv MAE error: ",averageMAE)
-    
+        return averageMAE
     
     #execute power plant train to get model
     def executeTrainPowerPlant(self):
@@ -70,9 +67,15 @@ class clsregressionHw(object):
         trainX = preprocessNormalize(trainX)
         #print ("train X: ", trainX)
         print ("train Y: ", trainY)
+
         knnNeighbors = range(1, 20)     #[1,2,3,4,5,6,7]
+        i = 0
         for nNeighbor in knnNeighbors:
-            modelSelectionCV(KNeighborsRegressor, nNeighbor)
+            averageMAE = self.modelSelectionCV(trainX, trainY, KNeighborsRegressor, nNeighbor)
+            i +=1
+            print ("averageMAE cv MAE error: ",averageMAE)
+
+        
 
     # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
