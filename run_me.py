@@ -3,7 +3,6 @@ import numpy as np
 from kaggle import kaggleize
 
 from filesCommon import readTrainTestData
-from filesCommon import writeFileColumnwiseToKaggle
 
 from preprocessing import preprocessNANMethod
 from preprocessing import preprocessNormalize
@@ -75,8 +74,8 @@ class clsregressionHw(object):
     def executeTrainPowerPlant(self, fileTestOutput):
         trainX, trainY, testX = self.readDataPowerPlant()
         #trainX = preprocessNANMethod(trainX)
-        #trainX = preprocessTransform(trainX)
-        trainX = preprocessNormalize(trainX)
+        trainX = preprocessTransform(trainX)
+        #trainX = preprocessNormalize(trainX)
         #print ("train X: ", trainX)
         print ("train Y: ", trainY)
 
@@ -93,11 +92,12 @@ class clsregressionHw(object):
                 bestNNeighbor = nNeighbor
         
         print (" bestNNeighbor: ", bestNNeighbor)
-        predY = trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
-        
+        predY = self.trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
+        print ("predY : ", predY)
         #output to file
-        fileTestOutput , columnNameLst, columnsValues):
-        writeFileColumnwiseToKaggle()
+        kaggleize(predY, fileTestOutput)
+        
+    
     # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
         x = 1
@@ -120,8 +120,8 @@ def main():
     regrHwObj = clsregressionHw()
 
 
-    
-    regrHwObj.executeTrainPowerPlant()
+    fileTestOuput  = "../Predictions/PowerOutput/best.csv"
+    regrHwObj.executeTrainPowerPlant(fileTestOuput)
     
     
     

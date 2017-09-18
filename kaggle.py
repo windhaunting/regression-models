@@ -11,7 +11,7 @@ def kaggleize(predictions,file):
 		predictions.shape = [predictions.shape[0],1]
 
 	ids = 1 + np.arange(predictions.shape[0])[None].T
-	kaggle_predictions = np.hstack((ids,predictions)).astype(int)
+	kaggle_predictions = np.hstack((ids,predictions))     #.astype(float)
 	writer = csv.writer(open(file, 'w'))
 	writer.writerow(['# id','Prediction'])
 	writer.writerows(kaggle_predictions)
