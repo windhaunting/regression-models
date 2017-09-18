@@ -16,7 +16,7 @@ class clsregressionHw(object):
       pass
 
 
-    # Read in train and test data
+    # read in train and test data of powerPlant
     def readDataPowerPlant(self):
         
         #transferNPtoDataframe():
@@ -30,20 +30,13 @@ class clsregressionHw(object):
 
         return (trainX, trainY, testX)
     
+
+     
     
-    #execute power plant train to get model
-    def executeTrainPowerPlant(self):
-        trainX, trainY, testX = self.readDataPowerPlant()
-        #trainX = preprocessNANMethod(trainX)
-        #trainX = preprocessTransform(trainX)
-        trainX = preprocessNormalize(trainX)
-        #print ("train X: ", trainX)
-        print ("train Y: ", trainY)
+    # select model parameter by using CV
+    def modelSelectionCV(self, modelFunc, *parameters):
         
-        #select the model 
-        
-        nNeighbors = 5
-        k = 14
+        k = 10
         kf = KFold(n_splits=k)
         i = 0
         averageMAE = 0.0
@@ -53,28 +46,43 @@ class clsregressionHw(object):
             xSplitTrain, XSplitTest = trainX[trainIndex], trainX[testIndex]
             ySplitTrain, ySplitTest = trainY[trainIndex], trainY[testIndex]
             
-            neigh = KNeighborsRegressor(n_neighbors=nNeighbors)
-            
+            #neigh = KNeighborsRegressor(n_neighbors=nNeighbor)
+            model =  modelFunc(parameters)
             neigh.fit(xSplitTrain, ySplitTrain)
             
             #print ("parameter: ", neigh.get_params(deep=True))
             predYSplitTest = neigh.predict(XSplitTest)
             #print ("predYSplitTest : ", predYSplitTest)
             mAE =  self.computeMAEError(predYSplitTest, ySplitTest)
-            print ("cv MAE error: ",i, mAE)
+            #print ("cv MAE error: ",i, mAE)
             
             sumMAE += mAE
             i +=1
         averageMAE  = sumMAE/k
-        print ("averageMAE cv MAE error: ",averageMAE)
+            print ("averageMAE cv MAE error: ",averageMAE)
+    
+    
+    #execute power plant train to get model
+    def executeTrainPowerPlant(self):
+        trainX, trainY, testX = self.readDataPowerPlant()
+        #trainX = preprocessNANMethod(trainX)
+        #trainX = preprocessTransform(trainX)
+        trainX = preprocessNormalize(trainX)
+        #print ("train X: ", trainX)
+        print ("train Y: ", trainY)
+        knnNeighbors = range(1, 20)     #[1,2,3,4,5,6,7]
+        for nNeighbor in knnNeighbors:
+            modelSelectionCV(KNeighborsRegressor, nNeighbor)
+
+    # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
         x = 1
     
+   
     # Compute MAE
     def computeMAEError(self, y_hat, y):
         	# mean absolute error
         return np.abs(y_hat - y).mean()
-
 
 
 
