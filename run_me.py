@@ -11,6 +11,8 @@ from preprocessing import preprocessStandardScaler
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import KFold
 from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
+from sklearn.tree import DecisionTreeRegressor
 
 class clsregressionHw(object):
  
@@ -83,7 +85,7 @@ class clsregressionHw(object):
 
 
         #use  k nearest neighbor knn
-        knnNeighbors = range(1, len(trainX), 2)              #[1,2,3,4,5,6,7]
+        knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
         i = 0
         smallestMAE = 1.0
         bestNNeighbor = 0
@@ -105,7 +107,7 @@ class clsregressionHw(object):
        
         
     #execute linear regression powerPlant      
-    def executeTrainPowerPlantLR(self, fileTestOutputLR):
+    def executeTrainPowerPlantLR(self, fileTestOutputLRRidge, fileTestOutputLRLasso):
         trainX, trainY, testX = self.readDataPowerPlant()
         
         alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
@@ -116,18 +118,59 @@ class clsregressionHw(object):
         for alpha in alphaLst:
             k = 10
             averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha)
-            print ("averageMAE cv MAE error: ", averageMAE)
+            print ("averageMAE cv MAE error Ridge: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestAlpha = alpha
         
-        print (" bestAlpha: ", bestAlpha)
+        print (" bestAlpha Ridge: ", bestAlpha)
         predY = self.trainTestWholeData(trainX, trainY, testX, Ridge, bestAlpha)
+        print ("predY Ridge: ", predY)
+        #output to file
+        kaggleize(predY, fileTestOutputLRRidge)
+        
+        
+        smallestMAE = 1.0
+        bestAlpha = 0
+        
+        for alpha in alphaLst:
+            k = 10
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, Lasso, alpha)
+            print ("averageMAE cv MAE error Lasso: ", averageMAE)
+            if averageMAE < smallestMAE:
+                smallestMAE = averageMAE
+                bestAlpha = alpha
+        
+        print (" bestAlpha Lasso: ", bestAlpha)
+        predY = self.trainTestWholeData(trainX, trainY, testX, Lasso, bestAlpha)
+        print ("predY Lasso: ", predY)
+        #output to file
+        kaggleize(predY, fileTestOutputLRLasso)
+        
+    
+    
+       #execute Decision tree powerPlant      
+    def executeTrainPowerPlantDT(self, fileTestOutputDT):
+        trainX, trainY, testX = self.readDataPowerPlant()
+        
+        depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
+
+        smallestMAE = 1.0
+        bestDepth = 0
+        
+        for depth in depthLst:
+            k = 10
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, depth)
+            print ("averageMAE cv MAE error: ", averageMAE)
+            if averageMAE < smallestMAE:
+                smallestMAE = averageMAE
+                bestDepth = depth
+        
+        print (" bestDepth: ", bestDepth)
+        predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, bestDepth)
         print ("predY : ", predY)
         #output to file
-        kaggleize(predY, fileTestOutputLR)
-    
-    
+        kaggleize(predY, fileTestOutputDT)
     
     # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
@@ -152,12 +195,16 @@ def main():
 
 
     fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
-    fileTestOutputLR  = "../Predictions/PowerOutput/best_lr.csv"
-
     regrHwObj.executeTrainPowerPlantKNN(fileTestOutputKNN)
-    regrHwObj.executeTrainPowerPlantLR(fileTestOutputLR)
     
+    fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"
+    fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
+    regrHwObj.executeTrainPowerPlantLR(fileTestOutputLRRidge, fileTestOutputLRLasso)
     
+    fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
+    regrHwObj.executeTrainPowerPlantDT(fileTestOutputDT)
+
+
     '''
     train_x, train_y, test_x = regrHwObj.readDataPowerPlant()
     print('Train=', train_x.shape)
