@@ -160,14 +160,14 @@ class clsregressionHw(object):
         
         for depth in depthLst:
             k = 10
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, depth)
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, "MAE", "best", depth)
             print ("averageMAE cv MAE error: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestDepth = depth
         
         print (" bestDepth: ", bestDepth)
-        predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, bestDepth)
+        predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, "MAE", "best", bestDepth)
         print ("predY : ", predY)
         #output to file
         kaggleize(predY, fileTestOutputDT)
@@ -195,11 +195,11 @@ def main():
 
 
     fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
-    regrHwObj.executeTrainPowerPlantKNN(fileTestOutputKNN)
+    #regrHwObj.executeTrainPowerPlantKNN(fileTestOutputKNN)
     
     fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"
-    fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
-    regrHwObj.executeTrainPowerPlantLR(fileTestOutputLRRidge, fileTestOutputLRLasso)
+    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
+    #regrHwObj.executeTrainPowerPlantLR(fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
     regrHwObj.executeTrainPowerPlantDT(fileTestOutputDT)
