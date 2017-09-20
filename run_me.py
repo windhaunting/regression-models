@@ -39,7 +39,7 @@ class clsregressionHw(object):
      
     
     # select model parameter by using CV
-    def modelSelectionCV(self, trainX, trainY, k, modelFunc, *parameters):
+    def modelSelectionCV(self, trainX, trainY, k, modelFunc, *args):
 
         kf = KFold(n_splits=k)
         averageMAE = 0.0
@@ -50,7 +50,9 @@ class clsregressionHw(object):
             ySplitTrain, ySplitTest = trainY[trainIndex], trainY[testIndex]
             
             #neigh = KNeighborsRegressor(n_neighbors=nNeighbor)
-            model =  modelFunc(*parameters)
+            #model =  modelFunc(*parameters)
+            #model = modelFunc(*tuple(value for _, value in kwargs.items()))
+            model =  modelFunc(*args)
             model.fit(xSplitTrain, ySplitTrain)
             
             #print ("parameter: ", neigh.get_params(deep=True))
@@ -72,7 +74,8 @@ class clsregressionHw(object):
         predY = model.predict(testX)
         
         return predY
-        
+    
+    '''
     #execute power plant train to get model parameter of KNN
     def executeTrainPowerPlantKNN(self, fileTestOutputKNN):
         trainX, trainY, testX = self.readDataPowerPlant()
@@ -148,8 +151,8 @@ class clsregressionHw(object):
         kaggleize(predY, fileTestOutputLRLasso)
         
     
-    
-       #execute Decision tree powerPlant      
+    '''
+    #execute Decision tree powerPlant      
     def executeTrainPowerPlantDT(self, fileTestOutputDT):
         trainX, trainY, testX = self.readDataPowerPlant()
         
@@ -160,17 +163,19 @@ class clsregressionHw(object):
         
         for depth in depthLst:
             k = 10
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, "MAE", "best", depth)
-            print ("averageMAE cv MAE error: ", averageMAE)
+            args = ("MAE", "best", depth)            # {"criterion": "MAE", "splitter": "best", "max_depth": depth} 
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, args)
+            print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestDepth = depth
         
         print (" bestDepth: ", bestDepth)
-        predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, "MAE", "best", bestDepth)
-        print ("predY : ", predY)
+        #predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, {criterion: "MAE", splitter: "best", max_depth: bestDepth})
+        #print ("predY : ", predY)
         #output to file
-        kaggleize(predY, fileTestOutputDT)
+        #kaggleize(predY, fileTestOutputDT)
+    
     
     # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
