@@ -36,7 +36,19 @@ class clsregressionHw(object):
         return (trainX, trainY, testX)
     
 
-     
+         # read in train and test data of indoor locationzation
+    def read_data_localization_indoors(self):
+        print('Reading indoor localization dataset ...')
+        fileNameTrain = '../../Data/IndoorLocalization/data_train.txt'
+        fileNameTrainLabel = '../../Data/IndoorLocalization/labels_train.txt'
+        fileTest = '../../Data/IndoorLocalization/data_test.txt'
+        trainX, trainY, testX = readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest)
+                
+        print (" IndoorLocalization data shape: ", trainX.shape, trainY.shape, testX.shape)
+
+        return (trainX, trainY, testX)
+    
+    
     
     # select model parameter by using CV
     def modelSelectionCV(self, trainX, trainY, k, modelFunc, *args):
@@ -75,8 +87,10 @@ class clsregressionHw(object):
     
     
     #execute power plant train to get model parameter of KNN
-    def executeTrainPowerPlantKNN(self, fileTestOutputKNN):
-        trainX, trainY, testX = self.readDataPowerPlant()
+    def executeTrainPowerPlantKNN(self, data, knnNeighbors, fileTestOutputKNN):
+        trainX = data[0]
+        trainY = data[1]
+        testX = data[2]
         #trainX = preprocessNANMethod(trainX)           #not working
         #trainX = preprocessTransform(trainX)           #not working
         #trainX = preprocessNormalize(trainX)           #not working
@@ -86,7 +100,6 @@ class clsregressionHw(object):
 
 
         #use  k nearest neighbor knn
-        knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
         i = 0
         smallestMAE = 1.0
         bestNNeighbor = 0
@@ -108,14 +121,15 @@ class clsregressionHw(object):
        
         
     #execute linear regression powerPlant      
-    def executeTrainPowerPlantLR(self, fileTestOutputLRRidge, fileTestOutputLRLasso):
-        trainX, trainY, testX = self.readDataPowerPlant()
-        
-        alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
+    def executeTrainPowerPlantLR(self, data, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso):
+        trainX = data[0]
+        trainY = data[1]
+        testX = data[2]
 
+        #ridge begins
         smallestMAE = 1.0
         bestAlpha = 0
-        
+    
         for alpha in alphaLst:
             k = 10
             averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha)
@@ -130,7 +144,7 @@ class clsregressionHw(object):
         #output to file
         kaggleize(predY, fileTestOutputLRRidge)
         
-        
+        #lasso begins
         smallestMAE = 1.0
         bestAlpha = 0
         
@@ -151,11 +165,11 @@ class clsregressionHw(object):
     
     
     #execute Decision tree powerPlant      
-    def executeTrainPowerPlantDT(self, fileTestOutputDT):
-        trainX, trainY, testX = self.readDataPowerPlant()
+    def executeTrainPowerPlantDT(self, data, depthLst, fileTestOutputDT):
+        trainX = data[0]
+        trainY = data[1]
+        testX = data[2]
         
-        depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
-
         smallestMAE = 1.0
         bestDepth = 0
         
@@ -174,12 +188,7 @@ class clsregressionHw(object):
         #output to file
         kaggleize(predY, fileTestOutputDT)
     
-    
-    # read in train and test data of indoor locationzation
-    def read_data_localization_indoors(self):
-        x = 1
-    
-   
+     
     # Compute MAE
     def computeMAEError(self, y_hat, y):
         	# mean absolute error
@@ -196,16 +205,24 @@ def main():
     
     regrHwObj = clsregressionHw()
 
-
+    dataPowerPlant = regrHwObj.readDataPowerPlant()
+    #knn begins
+    knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
     fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
-    #regrHwObj.executeTrainPowerPlantKNN(fileTestOutputKNN)
+    #regrHwObj.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
     
+    #linear regression begins
+    alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"
-    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
-    #regrHwObj.executeTrainPowerPlantLR(fileTestOutputLRRidge, fileTestOutputLRLasso)
     
+    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
+    
+    #regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    
+    # Decision tree begins
+    depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
     fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
-    regrHwObj.executeTrainPowerPlantDT(fileTestOutputDT)
+    regrHwObj.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
 
 
     '''
