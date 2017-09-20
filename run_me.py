@@ -196,8 +196,6 @@ class clsregressionHw(object):
 
 
 
-
-
 ############################################################################
 
 
@@ -258,6 +256,7 @@ def main():
     kaggle.kaggleize(predicted_y, file_name)
     '''
     
+
 
 if __name__== "__main__":
   main()
