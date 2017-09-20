@@ -163,8 +163,8 @@ class clsregressionHw(object):
         
         for depth in depthLst:
             k = 10
-            args = ("MAE", "best", depth)            # {"criterion": "MAE", "splitter": "best", "max_depth": depth} 
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, args)
+            args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, *args)
             print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
