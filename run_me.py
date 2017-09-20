@@ -50,8 +50,6 @@ class clsregressionHw(object):
             ySplitTrain, ySplitTest = trainY[trainIndex], trainY[testIndex]
             
             #neigh = KNeighborsRegressor(n_neighbors=nNeighbor)
-            #model =  modelFunc(*parameters)
-            #model = modelFunc(*tuple(value for _, value in kwargs.items()))
             model =  modelFunc(*args)
             model.fit(xSplitTrain, ySplitTrain)
             
@@ -66,8 +64,8 @@ class clsregressionHw(object):
         return averageMAE
     
     # use whole train data to do train and then test
-    def trainTestWholeData(self, trainX, trainY, testX, modelFunc, *parameters):
-        model =  modelFunc(*parameters)
+    def trainTestWholeData(self, trainX, trainY, testX, modelFunc, *args):
+        model =  modelFunc(*args)
         model.fit(trainX, trainY)
             
         #print ("parameter: ", neigh.get_params(deep=True))
@@ -75,7 +73,7 @@ class clsregressionHw(object):
         
         return predY
     
-    '''
+    
     #execute power plant train to get model parameter of KNN
     def executeTrainPowerPlantKNN(self, fileTestOutputKNN):
         trainX, trainY, testX = self.readDataPowerPlant()
@@ -93,7 +91,7 @@ class clsregressionHw(object):
         smallestMAE = 1.0
         bestNNeighbor = 0
         for nNeighbor in knnNeighbors:
-            k = 10
+            k = 10             #cv kfold value
             averageMAE = self.modelSelectionCV(trainX, trainY, k, KNeighborsRegressor, nNeighbor)
             i += 1
             print ("averageMAE cv MAE error: ", averageMAE)
@@ -151,7 +149,7 @@ class clsregressionHw(object):
         kaggleize(predY, fileTestOutputLRLasso)
         
     
-    '''
+    
     #execute Decision tree powerPlant      
     def executeTrainPowerPlantDT(self, fileTestOutputDT):
         trainX, trainY, testX = self.readDataPowerPlant()
@@ -170,11 +168,11 @@ class clsregressionHw(object):
                 smallestMAE = averageMAE
                 bestDepth = depth
         
-        print (" bestDepth: ", bestDepth)
-        #predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, {criterion: "MAE", splitter: "best", max_depth: bestDepth})
-        #print ("predY : ", predY)
+        print (" bestDepth DT: ", bestDepth)
+        predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, *args)
+        print ("predY DT: ", predY)
         #output to file
-        #kaggleize(predY, fileTestOutputDT)
+        kaggleize(predY, fileTestOutputDT)
     
     
     # read in train and test data of indoor locationzation
