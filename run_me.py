@@ -204,7 +204,8 @@ class clsregressionHw(object):
 def main():
     
     regrHwObj = clsregressionHw()
-
+    
+    #predict power plant here
     dataPowerPlant = regrHwObj.readDataPowerPlant()
     #knn begins
     knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
@@ -213,18 +214,38 @@ def main():
     
     #linear regression begins
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
-    fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"
-    
-    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
-    
+    fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
+    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
     #regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
     fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
-    regrHwObj.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
+    #regrHwObj.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
 
-
+    
+    # predict for indoor localization here
+    dataIndoor = regrHwObj.read_data_localization_indoors()
+    
+     #knn begins
+    knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
+    fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
+    #regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
+    
+    #linear regression begins
+    alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
+    fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
+    
+    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
+    
+    #regrHwObj.executeTrainPowerPlantLR(dataIndoor, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    
+    # Decision tree begins
+    depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
+    fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
+    regrHwObj.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
+    
+    
     '''
     train_x, train_y, test_x = regrHwObj.readDataPowerPlant()
     print('Train=', train_x.shape)
