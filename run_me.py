@@ -107,14 +107,14 @@ class clsregressionHw(object):
             k = 10             #cv kfold value
             averageMAE = self.modelSelectionCV(trainX, trainY, k, KNeighborsRegressor, nNeighbor)
             i += 1
-            print ("averageMAE cv MAE error: ", averageMAE)
+            print ("averageMAE cv MAE error KNN: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestNNeighbor = nNeighbor
         
-        print (" bestNNeighbor: ", bestNNeighbor)
+        print (" bestNNeighbor KNN: ", bestNNeighbor)
         predY = self.trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
-        print ("predY : ", predY)
+        print ("predY : KNN", predY)
         #output to file
         kaggleize(predY, fileTestOutputKNN)
         
@@ -230,15 +230,13 @@ def main():
      #knn begins
     knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
     fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
-    #regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
+    regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
     
     #linear regression begins
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
-    
-    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
-    
-    #regrHwObj.executeTrainPowerPlantLR(dataIndoor, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
+    regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
