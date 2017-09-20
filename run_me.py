@@ -83,7 +83,7 @@ class clsregressionHw(object):
 
 
         #use  k nearest neighbor knn
-        knnNeighbors = range(1, 20)              #[1,2,3,4,5,6,7]
+        knnNeighbors = range(1, len(trainX), 2)              #[1,2,3,4,5,6,7]
         i = 0
         smallestMAE = 1.0
         bestNNeighbor = 0
@@ -108,7 +108,7 @@ class clsregressionHw(object):
     def executeTrainPowerPlantLR(self, fileTestOutputLR):
         trainX, trainY, testX = self.readDataPowerPlant()
         
-        alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]
+        alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
 
         smallestMAE = 1.0
         bestAlpha = 0
