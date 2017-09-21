@@ -16,11 +16,10 @@ from sklearn.tree import DecisionTreeRegressor
 
 class clsregressionHw(object):
  
-    
     def __init__(self):
       pass
 
-
+    
     # read in train and test data of powerPlant
     def readDataPowerPlant(self):
         
@@ -36,7 +35,7 @@ class clsregressionHw(object):
         return (trainX, trainY, testX)
     
 
-         # read in train and test data of indoor locationzation
+    # read in train and test data of indoor locationzation
     def read_data_localization_indoors(self):
         print('Reading indoor localization dataset ...')
         fileNameTrain = '../../Data/IndoorLocalization/data_train.txt'
@@ -48,8 +47,11 @@ class clsregressionHw(object):
 
         return (trainX, trainY, testX)
     
-    
-    
+   # Compute MAE
+    def computeMAEError(self, y_hat, y):
+        	# mean absolute error
+        return np.abs(y_hat - y).mean()
+
     # select model parameter by using CV
     def modelSelectionCV(self, trainX, trainY, kfold, modelFunc, *args):
 
@@ -96,7 +98,7 @@ class clsregressionHw(object):
         #trainX = preprocessNormalize(trainX)           #not working
         #trainX = preprocessStandardScaler(trainX)      #might work
         #print ("train X: ", trainX)
-        print ("train Y: ", trainX.shape)
+        print ("train X: ", trainX.shape)
 
 
         #use  k nearest neighbor knn
@@ -188,16 +190,10 @@ class clsregressionHw(object):
         #output to file
         kaggleize(predY, fileTestOutputDT)
     
-     
-    # Compute MAE
-    def computeMAEError(self, y_hat, y):
-        	# mean absolute error
-        return np.abs(y_hat - y).mean()
 
 
 
 ############################################################################
-
 
 def main():
     
@@ -206,14 +202,15 @@ def main():
     #predict power plant here
     dataPowerPlant = regrHwObj.readDataPowerPlant()
     #knn begins
-    knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
+    knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              #
     fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
-    #regrHwObj.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
+    regrHwObj.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
+    
     
     #linear regression begins
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
-    #fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
+    fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
     #regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
@@ -228,18 +225,18 @@ def main():
      #knn begins
     knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
     fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
-    regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
+    #regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
     
     #linear regression begins
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
     fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
-    regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    #regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
     fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
-    regrHwObj.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
+    #regrHwObj.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
     
     
     '''
