@@ -51,9 +51,9 @@ class clsregressionHw(object):
     
     
     # select model parameter by using CV
-    def modelSelectionCV(self, trainX, trainY, k, modelFunc, *args):
+    def modelSelectionCV(self, trainX, trainY, kfold, modelFunc, *args):
 
-        kf = KFold(n_splits=k)
+        kf = KFold(n_splits=kfold)
         averageMAE = 0.0
         sumMAE = 0.0
         for trainIndex, testIndex in kf.split(trainX):
@@ -96,7 +96,7 @@ class clsregressionHw(object):
         #trainX = preprocessNormalize(trainX)           #not working
         #trainX = preprocessStandardScaler(trainX)      #might work
         #print ("train X: ", trainX)
-        print ("train Y: ", trainY)
+        print ("train Y: ", trainX.shape)
 
 
         #use  k nearest neighbor knn
@@ -104,7 +104,7 @@ class clsregressionHw(object):
         smallestMAE = 1.0
         bestNNeighbor = 0
         for nNeighbor in knnNeighbors:
-            k = 10             #cv kfold value
+            k = 5      #cv kfold value
             averageMAE = self.modelSelectionCV(trainX, trainY, k, KNeighborsRegressor, nNeighbor)
             i += 1
             print ("averageMAE cv MAE error KNN: ", averageMAE)
@@ -131,7 +131,7 @@ class clsregressionHw(object):
         bestAlpha = 0
     
         for alpha in alphaLst:
-            k = 10
+            k = 5
             averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha)
             print ("averageMAE cv MAE error Ridge: ", averageMAE)
             if averageMAE < smallestMAE:
@@ -174,7 +174,7 @@ class clsregressionHw(object):
         bestDepth = 0
         
         for depth in depthLst:
-            k = 10
+            k = 5
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
             averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, *args)
             print ("averageMAE cv MAE error DT: ", averageMAE)
