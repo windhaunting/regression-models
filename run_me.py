@@ -74,7 +74,7 @@ class clsregressionHw(object):
             #print ("cv MAE error: ",i, mAE)
             sumMAE += mAE
 
-        averageMAE  = sumMAE/k
+        averageMAE  = sumMAE/kfold
         return averageMAE
     
     # use whole train data to do train and then test
@@ -97,8 +97,7 @@ class clsregressionHw(object):
         #trainX = preprocessTransform(trainX)           #not working
         #trainX = preprocessNormalize(trainX)           #not working
         #trainX = preprocessStandardScaler(trainX)      #might work
-        #print ("train X: ", trainX)
-        print ("train X: ", trainX.shape)
+        #print ("train X: ", trainX.shape)
 
 
         #use  k nearest neighbor knn
@@ -202,9 +201,9 @@ def main():
     #predict power plant here
     dataPowerPlant = regrHwObj.readDataPowerPlant()
     #knn begins
-    knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              #
+    knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
     fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
-    regrHwObj.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
+    #regrHwObj.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
     
     
     #linear regression begins
@@ -223,9 +222,9 @@ def main():
     dataIndoor = regrHwObj.read_data_localization_indoors()
     
      #knn begins
-    knnNeighbors = range(1, 30)    #len(trainX), 2)              #[1,2,3,4,5,6,7]
+    knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
     fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
-    #regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
+    regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
     
     #linear regression begins
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
