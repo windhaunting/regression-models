@@ -119,8 +119,7 @@ class clsregressionHw(object):
         #output to file
         kaggleize(predY, fileTestOutputKNN)
         
-       
-        
+    
     #execute linear regression powerPlant      
     def executeTrainPowerPlantLR(self, data, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso):
         trainX = data[0]
