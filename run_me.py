@@ -103,7 +103,7 @@ class clsregressionHw(object):
         #use  k nearest neighbor knn
         i = 0
         smallestMAE = 1.0
-        bestNNeighbor = 0
+        bestNNeighbor = knnNeighbors[0]
         for nNeighbor in knnNeighbors:
             k = 5      #cv kfold value
             averageMAE = self.modelSelectionCV(trainX, trainY, k, KNeighborsRegressor, nNeighbor)
