@@ -152,7 +152,7 @@ class clsregressionHw(object):
         bestAlpha = alphaLst[0]
         
         for alpha in alphaLst:
-            k = 10
+            k = 5
             averageMAE = self.modelSelectionCV(trainX, trainY, k, Lasso, alpha)
             print ("averageMAE cv MAE error Lasso: ", averageMAE)
             if averageMAE < smallestMAE:
@@ -224,7 +224,7 @@ def main():
     # predict for indoor localization here
     dataIndoor = regrHwObj.read_data_localization_indoors()
     
-     #knn begins
+    #knn begins
     knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
     fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
     #regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
@@ -232,7 +232,7 @@ def main():
     #linear regression begins
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
-    fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
+    fileTestOutputLRLasso  = "../Predictions/IndoorLocalization/best_lr_lasso.csv"
     regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
