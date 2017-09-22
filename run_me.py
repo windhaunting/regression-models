@@ -201,7 +201,7 @@ def main():
     regrHwObj = clsregressionHw()
     
     #predict power plant here
-    dataPowerPlant = regrHwObj.readDataPowerPlant()
+    #dataPowerPlant = regrHwObj.readDataPowerPlant()
    
     #knn begins
     knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
@@ -213,7 +213,7 @@ def main():
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
     fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
-    regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    #regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
@@ -222,7 +222,7 @@ def main():
 
     
     # predict for indoor localization here
-    #dataIndoor = regrHwObj.read_data_localization_indoors()
+    dataIndoor = regrHwObj.read_data_localization_indoors()
     
      #knn begins
     knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
