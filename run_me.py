@@ -135,14 +135,14 @@ class clsregressionHw(object):
     
         for alpha in alphaLst:
             k = 5
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha)
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha=alpha)
             print ("averageMAE cv MAE error Ridge: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestAlpha = alpha
         
         print (" bestAlpha Ridge: ", bestAlpha)
-        predY = self.trainTestWholeData(trainX, trainY, testX, Ridge, bestAlpha)
+        predY = self.trainTestWholeData(trainX, trainY, testX, Ridge, alpha = bestAlpha)
         print ("predY Ridge: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputLRRidge)
@@ -153,14 +153,14 @@ class clsregressionHw(object):
         
         for alpha in alphaLst:
             k = 10
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, Lasso, alpha)
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, Lasso, alpha = alpha)
             print ("averageMAE cv MAE error Lasso: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestAlpha = alpha
         
         print (" bestAlpha Lasso: ", bestAlpha)
-        predY = self.trainTestWholeData(trainX, trainY, testX, Lasso, bestAlpha)
+        predY = self.trainTestWholeData(trainX, trainY, testX, Lasso, alpha= bestAlpha)
         print ("predY Lasso: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputLRLasso)
@@ -201,7 +201,8 @@ def main():
     regrHwObj = clsregressionHw()
     
     #predict power plant here
-    dataPowerPlant = regrHwObj.readDataPowerPlant()
+    #dataPowerPlant = regrHwObj.readDataPowerPlant()
+   
     #knn begins
     knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
     fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
@@ -212,7 +213,7 @@ def main():
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
     fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
-    regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    #regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
@@ -232,7 +233,7 @@ def main():
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
     fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"
-    #regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
