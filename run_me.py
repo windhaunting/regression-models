@@ -131,36 +131,36 @@ class clsregressionHw(object):
         
         #ridge begins
         smallestMAE = 1.0
-        bestAlpha = 0
+        bestAlpha = alphaLst[0]
     
         for alpha in alphaLst:
             k = 5
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha=alpha)
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha)
             print ("averageMAE cv MAE error Ridge: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestAlpha = alpha
         
         print (" bestAlpha Ridge: ", bestAlpha)
-        predY = self.trainTestWholeData(trainX, trainY, testX, Ridge, alpha = bestAlpha)
+        predY = self.trainTestWholeData(trainX, trainY, testX, Ridge, bestAlpha)
         print ("predY Ridge: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputLRRidge)
         
         #lasso begins
         smallestMAE = 1.0
-        bestAlpha = 0
+        bestAlpha = alphaLst[0]
         
         for alpha in alphaLst:
             k = 10
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, Lasso, alpha = alpha)
+            averageMAE = self.modelSelectionCV(trainX, trainY, k, Lasso, alpha)
             print ("averageMAE cv MAE error Lasso: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestAlpha = alpha
         
         print (" bestAlpha Lasso: ", bestAlpha)
-        predY = self.trainTestWholeData(trainX, trainY, testX, Lasso, alpha= bestAlpha)
+        predY = self.trainTestWholeData(trainX, trainY, testX, Lasso, bestAlpha)
         print ("predY Lasso: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputLRLasso)
@@ -174,7 +174,7 @@ class clsregressionHw(object):
         testX = data[2]
         
         smallestMAE = 1.0
-        bestDepth = 0
+        bestDepth = depthLst[0]
         
         for depth in depthLst:
             k = 5
