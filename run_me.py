@@ -233,12 +233,12 @@ def main():
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
     fileTestOutputLRLasso  = "../Predictions/IndoorLocalization/best_lr_lasso.csv"
-    regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    #regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
     fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
-    #regrHwObj.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
+    regrHwObj.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
     
     
     '''
