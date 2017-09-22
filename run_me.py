@@ -102,7 +102,7 @@ class clsregressionHw(object):
 
         #use  k nearest neighbor knn
         i = 0
-        smallestMAE = 1.0
+        smallestMAE = 2^32
         bestNNeighbor = knnNeighbors[0]
         for nNeighbor in knnNeighbors:
             k = 5      #cv kfold value
@@ -130,7 +130,7 @@ class clsregressionHw(object):
         #trainX = preprocessStandardScaler(trainX)      #might work
         
         #ridge begins
-        smallestMAE = 1.0
+        smallestMAE = 2^32
         bestAlpha = alphaLst[0]
     
         for alpha in alphaLst:
@@ -148,7 +148,7 @@ class clsregressionHw(object):
         kaggleize(predY, fileTestOutputLRRidge)
         
         #lasso begins
-        smallestMAE = 1.0
+        smallestMAE = 2^32
         bestAlpha = alphaLst[0]
         
         for alpha in alphaLst:
@@ -173,7 +173,7 @@ class clsregressionHw(object):
         trainY = data[1]
         testX = data[2]
         
-        smallestMAE = 1.0
+        smallestMAE = 2^32
         bestDepth = depthLst[0]
         
         for depth in depthLst:
@@ -201,7 +201,7 @@ def main():
     regrHwObj = clsregressionHw()
     
     #predict power plant here
-    #dataPowerPlant = regrHwObj.readDataPowerPlant()
+    dataPowerPlant = regrHwObj.readDataPowerPlant()
    
     #knn begins
     knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
@@ -213,7 +213,7 @@ def main():
     alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
     fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
     fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
-    #regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+    regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
     
     # Decision tree begins
     depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
@@ -222,7 +222,7 @@ def main():
 
     
     # predict for indoor localization here
-    dataIndoor = regrHwObj.read_data_localization_indoors()
+    #dataIndoor = regrHwObj.read_data_localization_indoors()
     
      #knn begins
     knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
