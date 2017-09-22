@@ -126,6 +126,9 @@ class clsregressionHw(object):
         trainY = data[1]
         testX = data[2]
 
+        #trainX = preprocessNormalize(trainX)           #not working
+        #trainX = preprocessStandardScaler(trainX)      #might work
+        
         #ridge begins
         smallestMAE = 1.0
         bestAlpha = 0
