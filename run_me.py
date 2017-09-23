@@ -93,10 +93,7 @@ class clsregressionHw(object):
         trainX = data[0]
         trainY = data[1]
         testX = data[2]
-        #trainX = preprocessNANMethod(trainX)           #not working
-        #trainX = preprocessTransform(trainX)           #not working
-        #trainX = preprocessNormalize(trainX)           #not working
-        #trainX = preprocessStandardScaler(trainX)      #might work
+ 
         #print ("train X: ", trainX.shape)
 
 
@@ -185,60 +182,84 @@ class clsregressionHw(object):
                 smallestMAE = averageMAE
                 bestDepth = depth
         
-        print (" bestDepth DT: ", bestDepth)
+        print (" bestDepth DT: ", bestDepth, smallestMAE)
         predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, *args)
-        print ("predY DT: ", predY)
+        #print ("predY DT: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputDT)
     
 
-
-
+     #for assignment questions:
+    def predictDifferentModels(self):
+        #predict power plant here
+        #dataPowerPlant = self.readDataPowerPlant()
+       
+        #knn begins
+        knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
+        fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
+        #self.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
+        
+        
+        #linear regression begins
+        alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
+        fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
+        fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
+        #self.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+        
+        # Decision tree begins
+        depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
+        fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
+        #self.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
+    
+        
+        # predict for indoor localization here
+        dataIndoor = self.read_data_localization_indoors()
+        
+        #knn begins
+        knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
+        fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
+        #self.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
+        
+        #linear regression begins
+        alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
+        fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
+        fileTestOutputLRLasso  = "../Predictions/IndoorLocalization/best_lr_lasso.csv"
+        #self.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+        
+        # Decision tree begins
+        depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
+        fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
+        self.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
+    
+    
+    #for kaggle competition
+    def predictDifferentModelsForKaggleComp(self):
+        dataPowerPlant = self.readDataPowerPlant()
+        trainX = dataPowerPlant[0]
+        trainY = dataPowerPlant[1]
+        testX = dataPowerPlant[2]
+        
+        #trainX = preprocessNANMethod(trainX)           #not working
+        #trainX = preprocessTransform(trainX)           #not working
+        #trainX = preprocessNormalize(trainX)           #not working
+        #trainX = preprocessStandardScaler(trainX)      #might work
+        depthLst = range(1, 20)             #range(1, 20) try different alpha from test
+        fileTestOutputDT  = "../Predictions/PowerOutput/best_DT-competition.csv"
+        self.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
+    
+    
 ############################################################################
 
 def main():
     
     regrHwObj = clsregressionHw()
     
-    #predict power plant here
-    #dataPowerPlant = regrHwObj.readDataPowerPlant()
-   
-    #knn begins
-    knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
-    fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
-    #regrHwObj.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
+    #for assigment querstion former part
+    #regrHwObj.predictDifferentModels()
     
     
-    #linear regression begins
-    alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
-    fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
-    fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
-    #regrHwObj.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
-    
-    # Decision tree begins
-    depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
-    fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
-    #regrHwObj.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
-
-    
-    # predict for indoor localization here
-    dataIndoor = regrHwObj.read_data_localization_indoors()
-    
-    #knn begins
-    knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
-    fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
-    #regrHwObj.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
-    
-    #linear regression begins
-    alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
-    fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
-    fileTestOutputLRLasso  = "../Predictions/IndoorLocalization/best_lr_lasso.csv"
-    #regrHwObj.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
-    
-    # Decision tree begins
-    depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
-    fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
-    regrHwObj.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
+    #for kaggle competition later pater
+    regrHwObj.predictDifferentModelsForKaggleComp()
     
     
     '''
