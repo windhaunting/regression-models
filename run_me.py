@@ -15,6 +15,8 @@ from sklearn.linear_model import Lasso
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import cross_val_score
 
+from visualizePlot import plotExploreDataPreTrain
+
 class clsregressionHw(object):
  
     def __init__(self):
@@ -248,6 +250,9 @@ class clsregressionHw(object):
         trainY = dataPowerPlant[1]
         testX = dataPowerPlant[2]
         
+        plotExploreDataPreTrain(trainX, trainY)
+        
+        '''
         #trainX = preprocessNANMethod(trainX)           #not working
         #trainX = preprocessTransform(trainX)           #not working
         #trainX = preprocessNormalize(trainX)           #not working
@@ -259,7 +264,7 @@ class clsregressionHw(object):
             (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
             lstRes.append((smallestMAE, kfold, bestDepth))
         print ("results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
-        
+        '''
         
         
 

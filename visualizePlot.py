@@ -8,37 +8,25 @@ Created on Sat Sep  16 10:57:42 2017
 
 import matplotlib.pyplot as plt
 
+
 #visualize plot
 #analyse and visualize data before training
-def plotExploreDataPreTrain(data):
+def plotExploreDataPreTrain(trainX, trainY):
     
-    trainX = dataPowerPlant[0]
-    trainY = dataPowerPlant[1]
-    testX = dataPowerPlant[2]
-      
-    
-    
+
     # specifies the parameters of our graphs
-    fig = plt.figure(figsize=(18,6), dpi=1600) 
-    alpha=alpha_scatterplot = 0.2 
-    alpha_bar_chart = 0.55
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 10))
+    fig.subplots_adjust(hspace=1.0) ## Create space between plots
+    plt.hist(trainY, normed=True, bins=30)
     
-    #plot many diffrent shaped graphs together 
-    # distribution of histogram
-    ax1 = plt.subplot2grid((2,3),(0,0))
-    trainY.plot(figsize=(15,5))
-    ax1.set_xlim(-1, len(trainY))
-    plt.title("Distribution of Purchase")
     
-    plt.subplot2grid((2,3),(0,1))
-    df['Purchase'].plot(figsize=(15,5));
-
-
-    plt.subplot2grid((2,3),(0,2))
-    plt.scatter(df.Occupation, df.Purchase, alpha=alpha_scatterplot)
-    plt.ylabel("Purchase")
-    plt.show()
-    
+    '''
+    for x in trainX:             #get every column
+        plt.subplot2grid((2,3),(0,2))
+        plt.scatter(df.Occupation, df.Purchase, alpha=alpha_scatterplot)
+        plt.ylabel("Purchase")
+        plt.show()
+    '''
     
     '''
     print ("matplotlib.__version__: ", matplotlib.__version__)
@@ -56,8 +44,8 @@ def plotExploreDataPreTrain(data):
     plt.figure()
     #df['Purchase'].plot()
 
-    plt.hist(df['Purchase'], normed=True, bins=30)
-    plt.ylabel('Probability');
+   # plt.hist(df['Purchase'], normed=True, bins=30)
+    #plt.ylabel('Probability');
 
     '''
     fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 10))
