@@ -15,17 +15,15 @@ def plotExploreDataPreTrain(trainX, trainY):
     
 
     # specifies the parameters of our graphs
-    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(20, 10))
+    fig, axes = plt.subplots(nrows=trainX.shape[1]+1, ncols=1, figsize=(20, 20))
     fig.subplots_adjust(hspace=1.0) ## Create space between plots
-    axes[0,0].hist(trainY, normed=True, bins=30)
-    axes[0,1].hist(trainY, normed=False, bins=30)
-    
-    j = 0
+    axes[0].hist(trainY, normed=True, bins=30)
+    #axes[0,0].hist(trainY, normed=False, bins=30)
+    print ("train X shape: ", trainX.shape[1])
     for i in range(1, trainX.shape[1] + 1):             #get every column
         
-        axes[i,j%2].plot(trainX[:, i], trainY)
+        axes[i].plot(trainX[:, i-1], trainY)
         
-        j += 1
         plt.xlabel( str(i) + "th x feature")
         plt.ylabel("powerplant")
         plt.show()
