@@ -271,27 +271,12 @@ def main():
     
     #for assigment querstion former part
     #regrHwObj.predictDifferentModels()
-    
-    
+        
     #for kaggle competition later pater
     regrHwObj.predictDifferentModelsForKaggleComp()
     
     
-    '''
-    train_x, train_y, test_x = regrHwObj.readDataPowerPlant()
-    print('Train=', train_x.shape)
-    print('Test=', test_x.shape)
-    
-    # Create dummy test output values
-    predicted_y = np.ones(test_x.shape[0]) * -1
-    # Output file location
-    file_name = '../Predictions/IndoorLocalization/best.csv'
-    # Writing output in Kaggle format
-    print('Writing output to ', file_name)
-    kaggle.kaggleize(predicted_y, file_name)
-    '''
-    
-
+  
 
 if __name__== "__main__":
   main()
