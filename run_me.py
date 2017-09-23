@@ -83,7 +83,7 @@ class clsregressionHw(object):
 
         model =  modelFunc(*args)
             
-        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=5)
+        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=5, n_jobs=4)
         averageMAE = np.mean(scoresLst)
        
         return abs(averageMAE)
@@ -193,7 +193,7 @@ class clsregressionHw(object):
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestDepth = depth
-        
+        args = ("mae", "best", bestDepth)            # {"criterion": "mae", "splitter": "best", "max_depth": bestDepth} 
         print (" bestDepth DT: ", bestDepth, smallestMAE)
         predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, *args)
         #print ("predY DT: ", predY)
