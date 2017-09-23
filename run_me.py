@@ -16,8 +16,8 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import cross_val_score
 
 from visualizePlot import plotExploreDataPreTrain
-
 from visualizePlot import plotCommonAfterTrain
+from visualizePlot import plotResidualAfterTrain
 
 class clsregressionHw(object):
  
@@ -76,8 +76,9 @@ class clsregressionHw(object):
             predYSplitTest = model.predict(XSplitTest)
             
             #plot here
-            plotCommonAfterTrain(predYSplitTest, ySplitTest)
-        
+            #plotCommonAfterTrain(predYSplitTest, ySplitTest)
+            plotResidualAfterTrain(predYSplitTest, ySplitTest)
+            
             #print ("predYSplitTest : ", predYSplitTest)
             mAE =  self.computeMAEError(predYSplitTest, ySplitTest)
             #print ("cv MAE error: ",i, mAE)
@@ -251,8 +252,8 @@ class clsregressionHw(object):
         self.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
     
     
-    #for kaggle competition
-    def predictDifferentModelsForKaggleComp(self):
+    #for kaggle competition power plant
+    def predictDifferentModelsForPowerPlantKaggleComp(self):
         dataPowerPlant = self.readDataPowerPlant()
         trainX = dataPowerPlant[0]
         trainY = dataPowerPlant[1]
@@ -281,6 +282,11 @@ class clsregressionHw(object):
         (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
         
 
+ #for kaggle competition indoor localization
+    def predictDifferentModelsForPowerPlantKaggleComp(self):
+        dataPowerPlant = self.readDataPowerPlant()
+        
+        
 ############################################################################
 
 def main():
