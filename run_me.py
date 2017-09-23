@@ -290,7 +290,7 @@ class clsregressionHw(object):
         
         knnNeighbors = range(1, 30)  
         lstRes = []
-        for kfold in range(3, 20):
+        for kfold in range(8, 20):
             fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn-competition" + str(kfold) + ".csv"
             (smallestMAE, kfold, bestNNeighbor) = self.executeTrainPowerPlantKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
             lstRes.append((smallestMAE, kfold, bestNNeighbor))
