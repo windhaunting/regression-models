@@ -59,6 +59,13 @@ def plotExploreDataPreTrain(trainX, trainY):
     axes[0,1].set_title('Occupation')
     '''
 
+#plot general figure common AfterTrain
+def plotCommonAfterTrain(y_pred, y_true):
+    plt.scatter(y_true, y_pred)
+    plt.xlabel("True Values")
+    plt.ylabel("Predictions")
+    
+    
 #analyse and visualize data after training; residualPlot
 def plotResidualAfterTrain(y_pred, y_true):
     #plot residual plot
@@ -68,8 +75,3 @@ def plotResidualAfterTrain(y_pred, y_true):
     plt.plot(y_pred, y_true-y_pred, color='blue', linewidth=3)  #
     plt.show()
     
-#plot general figure common AfterTrain
-def plotCommonAfterTrain(y_pred, y_true):
-    plt.scatter(y_true, y_pred)
-    plt.xlabel("True Values")
-    plt.ylabel("Predictions")

@@ -17,6 +17,8 @@ from sklearn.model_selection import cross_val_score
 
 from visualizePlot import plotExploreDataPreTrain
 
+from visualizePlot import plotCommonAfterTrain
+
 class clsregressionHw(object):
  
     def __init__(self):
@@ -72,6 +74,10 @@ class clsregressionHw(object):
             
             #print ("parameter: ", neigh.get_params(deep=True))
             predYSplitTest = model.predict(XSplitTest)
+            
+            #plot here
+            plotCommonAfterTrain(predYSplitTest, ySplitTest)
+        
             #print ("predYSplitTest : ", predYSplitTest)
             mAE =  self.computeMAEError(predYSplitTest, ySplitTest)
             #print ("cv MAE error: ",i, mAE)
@@ -181,8 +187,8 @@ class clsregressionHw(object):
         
         for depth in depthLst:
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
-            #averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
-            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, DecisionTreeRegressor, *args)
+            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
+            #averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, DecisionTreeRegressor, *args)
 
             #print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
@@ -193,8 +199,10 @@ class clsregressionHw(object):
         predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, *args)
         #print ("predY DT: ", predY)
         #output to file
-        kaggleize(predY, fileTestOutputDT)
-    
+        if fileTestOutputDT != "":
+            kaggleize(predY, fileTestOutputDT)
+        
+
         return (smallestMAE, kfold, bestDepth)
 
      #for assignment questions:
@@ -266,6 +274,11 @@ class clsregressionHw(object):
         print ("results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
         '''
         
+        #optimized cv kfold = 5-10, depth = 8 or 9
+        kfold = 5
+        depthLst = [8]
+        fileTestOutputDT  = ""
+        (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
         
 
 ############################################################################
