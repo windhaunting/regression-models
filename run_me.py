@@ -112,14 +112,14 @@ class clsregressionHw(object):
         for nNeighbor in knnNeighbors:
             averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
             i += 1
-            #print ("averageMAE cv MAE error KNN: ", averageMAE)
+            print ("averageMAE cv MAE error KNN: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestNNeighbor = nNeighbor
         
         print (" bestNNeighbor KNN: ", bestNNeighbor)
         predY = self.trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
-        print ("predY : KNN", predY)
+        #print ("predY : KNN", predY)
         #output to file
         kaggleize(predY, fileTestOutputKNN)
         
@@ -182,7 +182,7 @@ class clsregressionHw(object):
             averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
             #averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, k, DecisionTreeRegressor, *args)
 
-            print ("averageMAE cv MAE error DT: ", averageMAE)
+            #print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestDepth = depth
@@ -254,11 +254,15 @@ class clsregressionHw(object):
         #trainX = preprocessStandardScaler(trainX)      #might work
         depthLst = range(1, 20)               #range(1, 20) try different alpha from test
         lstRes = []
-        for kfold in range(5, 20):
+        for kfold in range(3, 20):
             fileTestOutputDT  = "../Predictions/PowerOutput/best_DT-competition" + str(kfold) + ".csv"
             (smallestMAE, kfold) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
-            lstRes ()
-    
+            lstRes.append((smallestMAE, kfold))
+        print ("results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1])))
+        
+        
+        
+
 ############################################################################
 
 def main():
