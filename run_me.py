@@ -83,7 +83,7 @@ class clsregressionHw(object):
 
         model =  modelFunc(*args)
             
-        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=5, n_jobs=4)
+        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=kfold, n_jobs=2)
         averageMAE = np.mean(scoresLst)
        
         return abs(averageMAE)
@@ -179,8 +179,8 @@ class clsregressionHw(object):
         
         for depth in depthLst:
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
-            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
-            #averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, k, DecisionTreeRegressor, *args)
+            #averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
+            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, DecisionTreeRegressor, *args)
 
             #print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
