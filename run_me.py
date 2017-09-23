@@ -99,21 +99,18 @@ class clsregressionHw(object):
     
     
     #execute power plant train to get model parameter of KNN
-    def executeTrainPowerPlantKNN(self, data, knnNeighbors, fileTestOutputKNN):
+    def executeTrainPowerPlantKNN(self, data, kfold, knnNeighbors, fileTestOutputKNN):
         trainX = data[0]
         trainY = data[1]
         testX = data[2]
- 
         #print ("train X: ", trainX.shape)
-
-
+        
         #use  k nearest neighbor knn
         i = 0
         smallestMAE = 2^32
         bestNNeighbor = knnNeighbors[0]
         for nNeighbor in knnNeighbors:
-            k = 5      #cv kfold value
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, KNeighborsRegressor, nNeighbor)
+            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
             i += 1
             print ("averageMAE cv MAE error KNN: ", averageMAE)
             if averageMAE < smallestMAE:
@@ -128,7 +125,7 @@ class clsregressionHw(object):
         
     
     #execute linear regression powerPlant      
-    def executeTrainPowerPlantLR(self, data, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso):
+    def executeTrainPowerPlantLR(self, data, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso):
         trainX = data[0]
         trainY = data[1]
         testX = data[2]
@@ -141,8 +138,7 @@ class clsregressionHw(object):
         bestAlpha = alphaLst[0]
     
         for alpha in alphaLst:
-            k = 5
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, Ridge, alpha)
+            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, Ridge, alpha)
             print ("averageMAE cv MAE error Ridge: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
@@ -159,8 +155,7 @@ class clsregressionHw(object):
         bestAlpha = alphaLst[0]
         
         for alpha in alphaLst:
-            k = 5
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, Lasso, alpha)
+            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, Lasso, alpha)
             print ("averageMAE cv MAE error Lasso: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
@@ -173,9 +168,8 @@ class clsregressionHw(object):
         kaggleize(predY, fileTestOutputLRLasso)
         
     
-    
     #execute Decision tree powerPlant      
-    def executeTrainPowerPlantDT(self, data, depthLst, fileTestOutputDT):
+    def executeTrainPowerPlantDT(self, data, kfold, depthLst, fileTestOutputDT):
         trainX = data[0]
         trainY = data[1]
         testX = data[2]
@@ -184,10 +178,9 @@ class clsregressionHw(object):
         bestDepth = depthLst[0]
         
         for depth in depthLst:
-            k = 5
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
-            #averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, *args)
-            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, k, DecisionTreeRegressor, *args)
+            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
+            #averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, k, DecisionTreeRegressor, *args)
 
             print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
@@ -200,6 +193,7 @@ class clsregressionHw(object):
         #output to file
         kaggleize(predY, fileTestOutputDT)
     
+        return (smallestMAE, kfold)
 
      #for assignment questions:
     def predictDifferentModels(self):
@@ -209,19 +203,22 @@ class clsregressionHw(object):
         #knn begins
         knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
         fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
-        #self.executeTrainPowerPlantKNN(dataPowerPlant, knnNeighbors, fileTestOutputKNN)
+        kfold = 5
+        #self.executeTrainPowerPlantKNN(dataPowerPlant, kfold, knnNeighbors, fileTestOutputKNN)
         
         
         #linear regression begins
         alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
         fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
         fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
-        #self.executeTrainPowerPlantLR(dataPowerPlant, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+        kfold = 5
+        #self.executeTrainPowerPlantLR(dataPowerPlant, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
         
         # Decision tree begins
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
-        #self.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
+        kfold = 5
+        #self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
     
         
         # predict for indoor localization here
@@ -255,10 +252,11 @@ class clsregressionHw(object):
         #trainX = preprocessTransform(trainX)           #not working
         #trainX = preprocessNormalize(trainX)           #not working
         #trainX = preprocessStandardScaler(trainX)      #might work
-        depthLst = range(1, 20)             #range(1, 20) try different alpha from test
-        fileTestOutputDT  = "../Predictions/PowerOutput/best_DT-competition.csv"
-        self.executeTrainPowerPlantDT(dataPowerPlant, depthLst, fileTestOutputDT)
-    
+        depthLst = range(1, 20)               #range(1, 20) try different alpha from test
+        for kfold in range(5, 20):
+            fileTestOutputDT  = "../Predictions/PowerOutput/best_DT-competition" + str(kfold) + ".csv"
+            (smallestMAE, kfold) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+            
     
 ############################################################################
 
