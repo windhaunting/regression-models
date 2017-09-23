@@ -92,7 +92,7 @@ class clsregressionHw(object):
 
         model =  modelFunc(*args)
             
-        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=kfold, n_jobs=2)
+        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=kfold, n_jobs=3)
         averageMAE = np.mean(scoresLst)
        
         return abs(averageMAE)
@@ -119,9 +119,10 @@ class clsregressionHw(object):
         smallestMAE = 2^32
         bestNNeighbor = knnNeighbors[0]
         for nNeighbor in knnNeighbors:
-            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
+            #averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
+            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
             i += 1
-            #print ("averageMAE cv MAE error KNN: ", averageMAE)
+            print ("averageMAE cv MAE error KNN: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestNNeighbor = nNeighbor
