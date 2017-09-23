@@ -15,18 +15,20 @@ def plotExploreDataPreTrain(trainX, trainY):
     
 
     # specifies the parameters of our graphs
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 10))
+    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(20, 10))
     fig.subplots_adjust(hspace=1.0) ## Create space between plots
-    plt.hist(trainY, normed=True, bins=30)
+    axes[0,0].hist(trainY, normed=True, bins=30)
+    axes[0,1].hist(trainY, normed=False, bins=30)
     
-    
-    '''
-    for x in trainX:             #get every column
-        plt.subplot2grid((2,3),(0,2))
-        plt.scatter(df.Occupation, df.Purchase, alpha=alpha_scatterplot)
-        plt.ylabel("Purchase")
+    j = 0
+    for i in range(1, trainX.shape[1] + 1):             #get every column
+        
+        axes[i,j%2].plot(trainX[:, i], trainY)
+        
+        j += 1
+        plt.xlabel( str(i) + "th x feature")
+        plt.ylabel("powerplant")
         plt.show()
-    '''
     
     '''
     print ("matplotlib.__version__: ", matplotlib.__version__)
@@ -41,12 +43,14 @@ def plotExploreDataPreTrain(trainX, trainY):
 
     plt.show()
     '''
-    plt.figure()
+    '''
+    #plt.figure()
     #df['Purchase'].plot()
 
    # plt.hist(df['Purchase'], normed=True, bins=30)
     #plt.ylabel('Probability');
 
+    '''
     '''
     fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 10))
     fig.subplots_adjust(hspace=1.0) ## Create space between plots
