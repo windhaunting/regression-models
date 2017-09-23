@@ -187,13 +187,13 @@ class clsregressionHw(object):
                 smallestMAE = averageMAE
                 bestDepth = depth
         args = ("mae", "best", bestDepth)            # {"criterion": "mae", "splitter": "best", "max_depth": bestDepth} 
-        print (" bestDepth DT: ", bestDepth, smallestMAE)
+        print (" bestDepth DT: ",smallestMAE,  kfold,  bestDepth)
         predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, *args)
         #print ("predY DT: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputDT)
     
-        return (smallestMAE, kfold)
+        return (smallestMAE, kfold, bestDepth)
 
      #for assignment questions:
     def predictDifferentModels(self):
@@ -256,9 +256,9 @@ class clsregressionHw(object):
         lstRes = []
         for kfold in range(3, 20):
             fileTestOutputDT  = "../Predictions/PowerOutput/best_DT-competition" + str(kfold) + ".csv"
-            (smallestMAE, kfold) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
-            lstRes.append((smallestMAE, kfold))
-        print ("results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1])))
+            (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+            lstRes.append((smallestMAE, kfold, bestDepth))
+        print ("results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
         
         
         
