@@ -10,9 +10,14 @@ import matplotlib.pyplot as plt
 
 #visualize plot
 #analyse and visualize data before training
-def plotExploreDataPreTrain(df):
+def plotExploreDataPreTrain(data):
     
-    '''
+    trainX = dataPowerPlant[0]
+    trainY = dataPowerPlant[1]
+    testX = dataPowerPlant[2]
+      
+    
+    
     # specifies the parameters of our graphs
     fig = plt.figure(figsize=(18,6), dpi=1600) 
     alpha=alpha_scatterplot = 0.2 
@@ -20,10 +25,9 @@ def plotExploreDataPreTrain(df):
     
     #plot many diffrent shaped graphs together 
     # distribution of histogram
-    print ("cnt: ", df["Purchase"].value_counts().sort_values())
     ax1 = plt.subplot2grid((2,3),(0,0))
-    df.Purchase.value_counts().plot(figsize=(15,5))
-    ax1.set_xlim(-1, len(df.Purchase.value_counts()))
+    trainY.plot(figsize=(15,5))
+    ax1.set_xlim(-1, len(trainY))
     plt.title("Distribution of Purchase")
     
     plt.subplot2grid((2,3),(0,1))
@@ -34,7 +38,7 @@ def plotExploreDataPreTrain(df):
     plt.scatter(df.Occupation, df.Purchase, alpha=alpha_scatterplot)
     plt.ylabel("Purchase")
     plt.show()
-    '''
+    
     
     '''
     print ("matplotlib.__version__: ", matplotlib.__version__)
