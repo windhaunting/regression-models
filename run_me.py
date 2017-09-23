@@ -13,6 +13,7 @@ from sklearn.model_selection import KFold
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import cross_val_score
 
 class clsregressionHw(object):
  
@@ -77,6 +78,15 @@ class clsregressionHw(object):
         averageMAE  = sumMAE/kfold
         return averageMAE
     
+    #use cros_val_score
+    def modelSelectionCVCrosValScore(self, trainX, trainY, kfold, modelFunc, *args):
+
+        model =  modelFunc(*args)
+            
+        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=5)
+        averageMAE = np.mean(scoresLst)
+       
+        return abs(averageMAE)
     # use whole train data to do train and then test
     def trainTestWholeData(self, trainX, trainY, testX, modelFunc, *args):
         model =  modelFunc(*args)
@@ -176,7 +186,9 @@ class clsregressionHw(object):
         for depth in depthLst:
             k = 5
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
-            averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, *args)
+            #averageMAE = self.modelSelectionCV(trainX, trainY, k, DecisionTreeRegressor, *args)
+            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, k, DecisionTreeRegressor, *args)
+
             print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
