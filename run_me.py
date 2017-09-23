@@ -296,7 +296,8 @@ class clsregressionHw(object):
             lstRes.append((smallestMAE, kfold, bestNNeighbor))
         
         print ("indoor localization results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
-            
+        
+
 ############################################################################
 
 def main():
