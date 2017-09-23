@@ -77,7 +77,7 @@ class clsregressionHw(object):
             
             #plot here
             #plotCommonAfterTrain(predYSplitTest, ySplitTest)
-            plotResidualAfterTrain(predYSplitTest, ySplitTest)
+            #plotResidualAfterTrain(predYSplitTest, ySplitTest)
             
             #print ("predYSplitTest : ", predYSplitTest)
             mAE =  self.computeMAEError(predYSplitTest, ySplitTest)
@@ -126,12 +126,13 @@ class clsregressionHw(object):
                 smallestMAE = averageMAE
                 bestNNeighbor = nNeighbor
         
-        print (" bestNNeighbor KNN: ", bestNNeighbor)
+        print (" bestNNeighbor KNN: ", smallestMAE, kfold, bestNNeighbor)
         predY = self.trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
         #print ("predY : KNN", predY)
         #output to file
         kaggleize(predY, fileTestOutputKNN)
-        
+
+        return (smallestMAE, kfold, bestNNeighbor)
     
     #execute linear regression powerPlant      
     def executeTrainPowerPlantLR(self, data, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso):
@@ -272,7 +273,7 @@ class clsregressionHw(object):
             fileTestOutputDT  = "../Predictions/PowerOutput/best_DT-competition" + str(kfold) + ".csv"
             (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
             lstRes.append((smallestMAE, kfold, bestDepth))
-        print ("results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
+        print ("power plant results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
         '''
         
         #optimized cv kfold = 5-10, depth = 8 or 9
@@ -283,10 +284,18 @@ class clsregressionHw(object):
         
 
  #for kaggle competition indoor localization
-    def predictDifferentModelsForPowerPlantKaggleComp(self):
-        dataPowerPlant = self.readDataPowerPlant()
+    def predictDifferentModelsForIndoorLocalizationKaggleComp(self):
+        dataIndoor = self.read_data_localization_indoors()
         
+        knnNeighbors = range(1, 30)  
+        lstRes = []
+        for kfold in range(3, 20):
+            fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn-competition" + str(kfold) + ".csv"
+            (smallestMAE, kfold, bestNNeighbor) = self.executeTrainPowerPlantKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
+            lstRes.append((smallestMAE, kfold, bestNNeighbor))
         
+        print ("indoor localization results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
+            
 ############################################################################
 
 def main():
@@ -296,11 +305,14 @@ def main():
     #for assigment querstion former part
     #regrHwObj.predictDifferentModels()
         
-    #for kaggle competition later pater
-    regrHwObj.predictDifferentModelsForKaggleComp()
+    #for kaggle competition power plant
+    #regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
+    
+    #for kaggle competition indoor localization
+    regrHwObj.predictDifferentModelsForIndoorLocalizationKaggleComp()
     
     
-  
+
 
 if __name__== "__main__":
   main()
