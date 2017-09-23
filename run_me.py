@@ -121,7 +121,7 @@ class clsregressionHw(object):
         for nNeighbor in knnNeighbors:
             averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
             i += 1
-            print ("averageMAE cv MAE error KNN: ", averageMAE)
+            #print ("averageMAE cv MAE error KNN: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestNNeighbor = nNeighbor
