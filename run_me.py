@@ -96,6 +96,7 @@ class clsregressionHw(object):
         averageMAE = np.mean(scoresLst)
        
         return abs(averageMAE)
+    
     # use whole train data to do train and then test
     def trainTestWholeData(self, trainX, trainY, testX, modelFunc, *args):
         model =  modelFunc(*args)
@@ -324,8 +325,6 @@ def main():
     regrHwObj.predictDifferentModelsForIndoorLocalizationKaggleComp()
     
     
-
-
 if __name__== "__main__":
   main()
   
