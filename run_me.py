@@ -302,7 +302,7 @@ class clsregressionHw(object):
         
         depthLst = range(1, 20)               #range(1, 20) try different alpha from test
         lstRes = []
-        for kfold in range(3, 20):
+        for kfold in range(9, 20):
             fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT-competition" + str(kfold) + ".csv"
             (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
             lstRes.append((smallestMAE, kfold, bestDepth))
