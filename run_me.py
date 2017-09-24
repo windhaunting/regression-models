@@ -190,8 +190,8 @@ class clsregressionHw(object):
         
         for depth in depthLst:
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
-            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
-            #averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, DecisionTreeRegressor, *args)
+            #averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
+            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, DecisionTreeRegressor, *args)
 
             #print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
@@ -288,6 +288,7 @@ class clsregressionHw(object):
     def predictDifferentModelsForIndoorLocalizationKaggleComp(self):
         dataIndoor = self.read_data_localization_indoors()
         
+        '''
         knnNeighbors = range(1, 30)  
         lstRes = []
         for kfold in range(8, 20):
@@ -295,8 +296,17 @@ class clsregressionHw(object):
             (smallestMAE, kfold, bestNNeighbor) = self.executeTrainPowerPlantKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
             lstRes.append((smallestMAE, kfold, bestNNeighbor))
         
-        print ("indoor localization results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
+        print ("indoor localization KNN results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
+        '''
         
+        depthLst = range(1, 20)               #range(1, 20) try different alpha from test
+        lstRes = []
+        for kfold in range(3, 20):
+            fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT-competition" + str(kfold) + ".csv"
+            (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
+            lstRes.append((smallestMAE, kfold, bestDepth))
+        print ("indoor localization DT results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
+
 
 ############################################################################
 
