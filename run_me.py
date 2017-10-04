@@ -87,15 +87,6 @@ class clsregressionHw(object):
         averageMAE  = sumMAE/kfold
         return averageMAE
     
-    #use cros_val_score
-    def modelSelectionCVCrosValScore(self, trainX, trainY, kfold, modelFunc, *args):
-
-        model =  modelFunc(*args)
-            
-        scoresLst = cross_val_score(model, trainX, trainY, scoring="neg_mean_absolute_error", cv=kfold, n_jobs=3)
-        averageMAE = np.mean(scoresLst)
-       
-        return abs(averageMAE)
     
     # use whole train data to do train and then test
     def trainTestWholeData(self, trainX, trainY, testX, modelFunc, *args):
