@@ -188,7 +188,7 @@ class clsregressionHw(object):
         for depth in depthLst:
             timeBegin = time.time()             #time begin
             
-            args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
+            args = ("mse", "random", depth)         #mae take so long time?   # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
             averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
 
             print ("averageMAE cv MAE error DT: ", averageMAE)
@@ -239,7 +239,7 @@ class clsregressionHw(object):
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
         kfold = 5
-        #self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+        self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
     
         
         # predict for indoor localization here
@@ -265,7 +265,7 @@ class clsregressionHw(object):
         depthLst = [20,25,30,35,40]            #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
         kfold = 5
-        self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
+        #self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
         
     
     #for kaggle competition power plant
