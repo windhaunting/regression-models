@@ -113,7 +113,7 @@ class clsregressionHw(object):
         bestNNeighbor = knnNeighbors[0]
         
         for nNeighbor in knnNeighbors:
-            args = (nNeighbor, 'uniform', 'kd_tree', 30, 2,'minkowski', None, 5)
+            args = (nNeighbor, 'uniform', 'auto', 30, 2,'minkowski', None, 8)
             averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, *args)
             i += 1
             print ("averageMAE cv MAE error KNN: ", averageMAE)
@@ -201,7 +201,7 @@ class clsregressionHw(object):
         #plot cv time
         fileNamePart = fileTestOutputDT.split("/")[2]
         title = "Time of cv for " + fileNamePart
-        plotCVTime(paraLstX, timeLstY, "Decision tree depth", "Time (in Millisecond)", title, "../Figures/DTCVTime" + fileNamePart + ".pdf")
+        #plotCVTime(paraLstX, timeLstY, "Decision tree depth", "Time (in Millisecond)", title, "../Figures/DTCVTime" + fileNamePart + ".pdf")
         
         args = ("mse", "best", bestDepth)            # {"criterion": "mae", "splitter": "best", "max_depth": bestDepth} 
         print (" bestDepth DT: ",smallestMAE,  kfold,  bestDepth)
@@ -225,7 +225,7 @@ class clsregressionHw(object):
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
         kfold = 5
-        #self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+        self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
             
         #knn begins
         print (" -----begin knn regression for power plant--------")
@@ -240,7 +240,7 @@ class clsregressionHw(object):
         fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
         fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
         kfold = 5
-        #self.executeTrainLR(dataPowerPlant, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+        self.executeTrainLR(dataPowerPlant, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
         
 
         # predict for indoor localization here
@@ -251,7 +251,7 @@ class clsregressionHw(object):
         depthLst = [20,25,30,35,40]            #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
         kfold = 5
-        #self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
+        self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
         
         #knn begins
         print (" -----begin knn for indoor localization--------")
@@ -266,7 +266,7 @@ class clsregressionHw(object):
         fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
         fileTestOutputLRLasso  = "../Predictions/IndoorLocalization/best_lr_lasso.csv"
         kfold = 5
-        #self.executeTrainLR(dataIndoor, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+        self.executeTrainLR(dataIndoor, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
         
     
     #for kaggle competition power plant
@@ -277,8 +277,8 @@ class clsregressionHw(object):
         testX = dataPowerPlant[2]
         
         plotExploreDataPreTrain(trainX, trainY)
+    
         
-        '''
         #trainX = preprocessNANMethod(trainX)           #not working
         #trainX = preprocessTransform(trainX)           #not working
         #trainX = preprocessNormalize(trainX)           #not working
@@ -291,14 +291,14 @@ class clsregressionHw(object):
             (smallestMAE, kfold, bestDepth) = self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
             lstRes.append((smallestMAE, kfold, bestDepth))
         print ("power plant results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
-        '''
         
+        '''
         #optimized cv kfold = 5-10, depth = 8 or 9
         kfold = 5
         depthLst = [8]
         fileTestOutputDT  = ""
         (smallestMAE, kfold, bestDepth) = self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
-        
+        '''
 
  #for kaggle competition indoor localization
     def predictDifferentModelsForIndoorLocalizationKaggleComp(self):
@@ -338,11 +338,11 @@ def main():
     
     #for assigment querstion former part
     print (" -----begin regression for question 1-4 ---------")
-    regrHwObj.predictDifferentModels()
+    #regrHwObj.predictDifferentModels()
         
     #for kaggle competition power plant
     print (" -----begin for question 5 kaggle competition for power plant ---------")
-    #regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
+    regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
     
     #for kaggle competition indoor localization
     print (" -----begin for question 5 kaggle competition for Indoor localization ---------")
