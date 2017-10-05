@@ -203,13 +203,16 @@ class clsregressionHw(object):
      #for assignment questions:
     def predictDifferentModels(self):
         #predict power plant here
+        
         #dataPowerPlant = self.readDataPowerPlant()
        
         #knn begins
+        print (" -----begin knn regression--------")
         knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
         fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
         kfold = 5
         #self.executeTrainPowerPlantKNN(dataPowerPlant, kfold, knnNeighbors, fileTestOutputKNN)
+        
         
         
         #linear regression begins
@@ -307,13 +310,16 @@ def main():
     regrHwObj = clsregressionHw()
     
     #for assigment querstion former part
-    #regrHwObj.predictDifferentModels()
+    print (" -----begin regression for question 1-4 ---------")
+    regrHwObj.predictDifferentModels()
         
     #for kaggle competition power plant
+    print (" -----begin for question 5 kaggle competition for power plant ---------")
     #regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
     
     #for kaggle competition indoor localization
-    regrHwObj.predictDifferentModelsForIndoorLocalizationKaggleComp()
+    print (" -----begin for question 5 kaggle competition for Indoor localization ---------")
+    #regrHwObj.predictDifferentModelsForIndoorLocalizationKaggleComp()
     
     
 if __name__== "__main__":

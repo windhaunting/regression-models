@@ -47,3 +47,6 @@ def plotResidualAfterTrain(y_pred, y_true):
     plt.plot(y_pred, y_true-y_pred, color='blue', linewidth=3)  #
     plt.show()
     
+
+
+def plotCVTime()
