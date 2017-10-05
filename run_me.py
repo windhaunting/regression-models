@@ -14,7 +14,6 @@ from sklearn.model_selection import KFold
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.model_selection import cross_val_score
 
 from visualizePlot import plotExploreDataPreTrain
 from visualizePlot import plotCommonAfterTrain
@@ -151,7 +150,7 @@ class clsregressionHw(object):
         
         print (" bestAlpha Ridge: ", bestAlpha)
         predY = self.trainTestWholeData(trainX, trainY, testX, Ridge, bestAlpha)
-        print ("predY Ridge: ", predY)
+        #print ("predY Ridge: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputLRRidge)
         
@@ -168,7 +167,7 @@ class clsregressionHw(object):
         
         print (" bestAlpha Lasso: ", bestAlpha)
         predY = self.trainTestWholeData(trainX, trainY, testX, Lasso, bestAlpha)
-        print ("predY Lasso: ", predY)
+        #print ("predY Lasso: ", predY)
         #output to file
         kaggleize(predY, fileTestOutputLRLasso)
         
@@ -201,7 +200,7 @@ class clsregressionHw(object):
         #plot cv time
         fileNamePart = fileTestOutputDT.split("/")[2]
         title = "Time of cv for " + fileNamePart
-        #plotCVTime(paraLstX, timeLstY, "Decision tree depth", "Time (in Millisecond)", title, "../Figures/DTCVTime" + fileNamePart + ".pdf")
+        plotCVTime(paraLstX, timeLstY, "Decision tree depth", "Time (in Millisecond)", title, "../Figures/DTCVTime" + fileNamePart + ".pdf")
         
         args = ("mse", "best", bestDepth)            # {"criterion": "mae", "splitter": "best", "max_depth": bestDepth} 
         print (" bestDepth DT: ",smallestMAE,  kfold,  bestDepth)
@@ -313,7 +312,7 @@ class clsregressionHw(object):
         print ("begin kaggle competition indoor localization KNN;  Question 5 ----")
         knnNeighbors = range(1, 40)  
         lstRes = []
-        for kfold in range(3, 15):
+        for kfold in range(2, 15):
             fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn-competition" + str(kfold) + ".csv"
             (smallestMAE, kfold, bestNNeighbor) = self.executeTrainKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
             lstRes.append((smallestMAE, kfold, bestNNeighbor))
@@ -339,11 +338,11 @@ def main():
     
     #for assigment querstion former part
     print (" -----begin regression for question 1-4 ---------")
-    #regrHwObj.predictDifferentModels()
+    regrHwObj.predictDifferentModels()
         
     #for kaggle competition power plant
     print (" -----begin for question 5 kaggle competition for power plant ---------")
-    #regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
+    regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
     
     #for kaggle competition indoor localization
     print (" -----begin for question 5 kaggle competition for Indoor localization ---------")
