@@ -100,8 +100,8 @@ class clsregressionHw(object):
         return predY
     
     
-    #execute power plant train to get model parameter of KNN
-    def executeTrainPowerPlantKNN(self, data, kfold, knnNeighbors, fileTestOutputKNN):
+    #execute model selection of KNN for power plant or indoor localization
+    def executeTrainKNN(self, data, kfold, knnNeighbors, fileTestOutputKNN):
         trainX = data[0]
         trainY = data[1]
         testX = data[2]
@@ -129,8 +129,8 @@ class clsregressionHw(object):
 
         return (smallestMAE, kfold, bestNNeighbor)
     
-    #execute linear regression powerPlant      
-    def executeTrainPowerPlantLR(self, data, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso):
+    #execute linear regression powerPlant or indoor localization    
+    def executeTrainLR(self, data, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso):
         trainX = data[0]
         trainY = data[1]
         testX = data[2]
@@ -173,8 +173,8 @@ class clsregressionHw(object):
         kaggleize(predY, fileTestOutputLRLasso)
         
     
-    #execute Decision tree powerPlant      
-    def executeTrainPowerPlantDT(self, data, kfold, depthLst, fileTestOutputDT):
+    #execute Decision tree powerPlant or indoor localization      
+    def executeTrainDT(self, data, kfold, depthLst, fileTestOutputDT):
         trainX = data[0]
         trainY = data[1]
         testX = data[2]
@@ -191,7 +191,7 @@ class clsregressionHw(object):
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
             averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
 
-            #print ("averageMAE cv MAE error DT: ", averageMAE)
+            print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestDepth = depth
@@ -199,7 +199,8 @@ class clsregressionHw(object):
             timeEnd = time.time()          #time end
             timeLstY.append((timeEnd-timeBegin)* 1000)
         #plot cv time
-        plotCVTime(paraLstX, timeLstY, "decision tree depth", "time (in Millisecond)", "../Figures/DTCVTimePlotPowerPlant.pdf")
+        fileNamePart = fileTestOutputDT.split("/")[2]
+        plotCVTime(paraLstX, timeLstY, "Decision tree depth", "Time (in Millisecond)", "../Figures/DTCVTime" + fileNamePart + ".pdf")
         
         args = ("mae", "best", bestDepth)            # {"criterion": "mae", "splitter": "best", "max_depth": bestDepth} 
         print (" bestDepth DT: ",smallestMAE,  kfold,  bestDepth)
@@ -223,7 +224,7 @@ class clsregressionHw(object):
         knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
         fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
         kfold = 5
-        #self.executeTrainPowerPlantKNN(dataPowerPlant, kfold, knnNeighbors, fileTestOutputKNN)
+        #self.executeTrainKNN(dataPowerPlant, kfold, knnNeighbors, fileTestOutputKNN)
         
         
         
@@ -232,33 +233,36 @@ class clsregressionHw(object):
         fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
         fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
         kfold = 5
-        #self.executeTrainPowerPlantLR(dataPowerPlant, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+        #self.executeTrainLR(dataPowerPlant, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
         
         # Decision tree begins
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
         kfold = 5
-        self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+        #self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
     
         
         # predict for indoor localization here
-        #dataIndoor = self.read_data_localization_indoors()
+        dataIndoor = self.read_data_localization_indoors()
         
         #knn begins
         knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
         fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
-        #self.executeTrainPowerPlantKNN(dataIndoor, knnNeighbors, fileTestOutputKNN)
+        kfold = 5
+        #self.executeTrainKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
         
         #linear regression begins
         alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
         fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
         fileTestOutputLRLasso  = "../Predictions/IndoorLocalization/best_lr_lasso.csv"
-        #self.executeTrainPowerPlantLR(dataIndoor, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
+        kfold = 5
+        #self.executeTrainLR(dataIndoor, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
         
         # Decision tree begins
-        depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
+        depthLst = [20,25,30,35,40]            #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
-        #self.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
+        kfold = 5
+        self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
         
         
     
