@@ -36,7 +36,7 @@ class clsregressionHw(object):
         fileTest = '../../Data/PowerOutput/data_test.txt'
         trainX, trainY, testX = readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest)
                 
-        print (" power data shape: ", trainX.shape, trainY.shape, testX.shape)
+        print (" power data shape trainX, trainY, testX: ", trainX.shape, trainY.shape, testX.shape)
 
         return (trainX, trainY, testX)
     
@@ -49,7 +49,7 @@ class clsregressionHw(object):
         fileTest = '../../Data/IndoorLocalization/data_test.txt'
         trainX, trainY, testX = readTrainTestData(fileNameTrain, fileNameTrainLabel, fileTest)
                 
-        print (" IndoorLocalization data shape: ", trainX.shape, trainY.shape, testX.shape)
+        print (" IndoorLocalization data shape trainX, trainY, testX: ", trainX.shape, trainY.shape, testX.shape)
 
         return (trainX, trainY, testX)
     
@@ -226,9 +226,8 @@ class clsregressionHw(object):
         kfold = 5
         #self.executeTrainKNN(dataPowerPlant, kfold, knnNeighbors, fileTestOutputKNN)
         
-        
-        
         #linear regression begins
+        print (" -----begin linear regression ridge and lasso for power plant--------")
         alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
         fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
         fileTestOutputLRLasso  = "../Predictions/PowerOutput/best_lr_lasso.csv"    
@@ -236,6 +235,7 @@ class clsregressionHw(object):
         #self.executeTrainLR(dataPowerPlant, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
         
         # Decision tree begins
+        print (" -----begin decision tree for power plant--------")
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
         kfold = 5
@@ -246,12 +246,14 @@ class clsregressionHw(object):
         dataIndoor = self.read_data_localization_indoors()
         
         #knn begins
+        print (" -----begin knn for indoor localization--------")
         knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
         fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn.csv"
         kfold = 5
         #self.executeTrainKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
         
         #linear regression begins
+        print (" -----begin linear regression of ridge and lasso for indoor localization--------")
         alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
         fileTestOutputLRRidge  = "../Predictions/IndoorLocalization/best_lr_ridge.csv"
         fileTestOutputLRLasso  = "../Predictions/IndoorLocalization/best_lr_lasso.csv"
@@ -259,11 +261,11 @@ class clsregressionHw(object):
         #self.executeTrainLR(dataIndoor, kfold, alphaLst, fileTestOutputLRRidge, fileTestOutputLRLasso)
         
         # Decision tree begins
+        print (" -----begin decision tree for indoor localization--------")
         depthLst = [20,25,30,35,40]            #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
         kfold = 5
         self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
-        
         
     
     #for kaggle competition power plant
@@ -280,11 +282,12 @@ class clsregressionHw(object):
         #trainX = preprocessTransform(trainX)           #not working
         #trainX = preprocessNormalize(trainX)           #not working
         #trainX = preprocessStandardScaler(trainX)      #might work
-        depthLst = range(1, 20)               #range(1, 20) try different alpha from test
+        #dataPowerPlant = (trainX, trainY, testX)
+        depthLst = range(1, 40)               #range(1, 40) try different alpha from test
         lstRes = []
-        for kfold in range(3, 20):
+        for kfold in range(3, 15):
             fileTestOutputDT  = "../Predictions/PowerOutput/best_DT-competition" + str(kfold) + ".csv"
-            (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+            (smallestMAE, kfold, bestDepth) = self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
             lstRes.append((smallestMAE, kfold, bestDepth))
         print ("power plant results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
         '''
@@ -301,6 +304,12 @@ class clsregressionHw(object):
         dataIndoor = self.read_data_localization_indoors()
         
         '''
+        trainX = dataIndoor[0]
+        trainY = dataIndoor[1]
+        testX = dataIndoor[2]
+        #trainX = preprocessStandardScaler(trainX)      #might work
+        #dataIndoor = (trainX, trainY, testX)
+
         knnNeighbors = range(1, 30)  
         lstRes = []
         for kfold in range(8, 20):
@@ -311,7 +320,7 @@ class clsregressionHw(object):
         print ("indoor localization KNN results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
         '''
         
-        depthLst = range(1, 20)               #range(1, 20) try different alpha from test
+        depthLst = range(1, 30)               #range(1, 20) try different alpha from test
         lstRes = []
         for kfold in range(9, 20):
             fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT-competition" + str(kfold) + ".csv"
