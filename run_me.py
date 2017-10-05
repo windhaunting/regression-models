@@ -1,5 +1,6 @@
 # Import python modules
 import numpy as np
+import time
 from kaggle import kaggleize
 
 from filesCommon import readTrainTestData
@@ -18,7 +19,7 @@ from sklearn.model_selection import cross_val_score
 from visualizePlot import plotExploreDataPreTrain
 from visualizePlot import plotCommonAfterTrain
 from visualizePlot import plotResidualAfterTrain
-
+from visualizePlot import plotCVTime
 class clsregressionHw(object):
  
     def __init__(self):
@@ -105,20 +106,21 @@ class clsregressionHw(object):
         trainY = data[1]
         testX = data[2]
         #print ("train X: ", trainX.shape)
-        
+
         #use  k nearest neighbor knn
         i = 0
         smallestMAE = 2^32
         bestNNeighbor = knnNeighbors[0]
+
         for nNeighbor in knnNeighbors:
-            #averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
-            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
+            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, KNeighborsRegressor, nNeighbor)
             i += 1
             print ("averageMAE cv MAE error KNN: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestNNeighbor = nNeighbor
         
+
         print (" bestNNeighbor KNN: ", smallestMAE, kfold, bestNNeighbor)
         predY = self.trainTestWholeData(trainX, trainY, testX, KNeighborsRegressor, bestNNeighbor)
         #print ("predY : KNN", predY)
@@ -180,15 +182,25 @@ class clsregressionHw(object):
         smallestMAE = 2^32
         bestDepth = depthLst[0]
         
+        paraLstX = depthLst
+        timeLstY = []
+
         for depth in depthLst:
+            timeBegin = time.time()             #time begin
+            
             args = ("mae", "best", depth)            # {"criterion": "mae", "splitter": "best", "max_depth": depth} 
-            #averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
-            averageMAE = self.modelSelectionCVCrosValScore(trainX, trainY, kfold, DecisionTreeRegressor, *args)
+            averageMAE = self.modelSelectionCV(trainX, trainY, kfold, DecisionTreeRegressor, *args)
 
             #print ("averageMAE cv MAE error DT: ", averageMAE)
             if averageMAE < smallestMAE:
                 smallestMAE = averageMAE
                 bestDepth = depth
+            
+            timeEnd = time.time()          #time end
+            timeLstY.append((timeEnd-timeBegin)* 1000)
+        #plot cv time
+        plotCVTime(paraLstX, timeLstY, "decision tree depth", "time (in Millisecond)", "../Figures/DTCVTimePlotPowerPlant.pdf")
+        
         args = ("mae", "best", bestDepth)            # {"criterion": "mae", "splitter": "best", "max_depth": bestDepth} 
         print (" bestDepth DT: ",smallestMAE,  kfold,  bestDepth)
         predY = self.trainTestWholeData(trainX, trainY, testX, DecisionTreeRegressor, *args)
@@ -202,19 +214,19 @@ class clsregressionHw(object):
 
      #for assignment questions:
     def predictDifferentModels(self):
-        #predict power plant here
         
-        #dataPowerPlant = self.readDataPowerPlant()
-       
+        #read power plant data
+        dataPowerPlant = self.readDataPowerPlant()
+    
         #knn begins
-        print (" -----begin knn regression--------")
+        print (" -----begin knn regression for power plant--------")
         knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2)              
         fileTestOutputKNN  = "../Predictions/PowerOutput/best_knn.csv"
         kfold = 5
         #self.executeTrainPowerPlantKNN(dataPowerPlant, kfold, knnNeighbors, fileTestOutputKNN)
         
         
-        '''
+        
         #linear regression begins
         alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
         fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
@@ -226,11 +238,11 @@ class clsregressionHw(object):
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/PowerOutput/best_DT.csv"
         kfold = 5
-        #self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+        self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
     
         
         # predict for indoor localization here
-        dataIndoor = self.read_data_localization_indoors()
+        #dataIndoor = self.read_data_localization_indoors()
         
         #knn begins
         knnNeighbors = [3,5,10,20,25]   #range(1, 30)    #len(trainX), 2) 
@@ -246,8 +258,8 @@ class clsregressionHw(object):
         # Decision tree begins
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
-        self.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
-        '''
+        #self.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
+        
         
     
     #for kaggle competition power plant

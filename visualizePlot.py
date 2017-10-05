@@ -48,5 +48,10 @@ def plotResidualAfterTrain(y_pred, y_true):
     plt.show()
     
 
-
-def plotCVTime()
+#plot cv time for different model
+def plotCVTime(xPara, yTime, xLabel, yLabel, plotSavePdfPath):
+    f = plt.figure()
+    plt.scatter(xPara, yTime,  color='black')
+    f.savefig(plotSavePdfPath, bbox_inches='tight')
+    plt.xlabel(xLabel)
+    plt.ylabel(yLabel)
