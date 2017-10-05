@@ -214,7 +214,7 @@ class clsregressionHw(object):
         #self.executeTrainPowerPlantKNN(dataPowerPlant, kfold, knnNeighbors, fileTestOutputKNN)
         
         
-        
+        '''
         #linear regression begins
         alphaLst = [1e-6, 1e-4, 1e-2, 1, 10]              #try different alpha from test
         fileTestOutputLRRidge  = "../Predictions/PowerOutput/best_lr_ridge.csv"    
@@ -247,7 +247,8 @@ class clsregressionHw(object):
         depthLst = [3, 6, 9, 12, 15]              #range(1, 20) try different alpha from test
         fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT.csv"
         self.executeTrainPowerPlantDT(dataIndoor, depthLst, fileTestOutputDT)
-    
+        '''
+        
     
     #for kaggle competition power plant
     def predictDifferentModelsForPowerPlantKaggleComp(self):
