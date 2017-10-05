@@ -293,7 +293,7 @@ class clsregressionHw(object):
         kfold = 5
         depthLst = [8]
         fileTestOutputDT  = ""
-        (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
+        (smallestMAE, kfold, bestDepth) = self.executeTrainDT(dataPowerPlant, kfold, depthLst, fileTestOutputDT)
         
 
  #for kaggle competition indoor localization
@@ -305,7 +305,7 @@ class clsregressionHw(object):
         lstRes = []
         for kfold in range(8, 20):
             fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn-competition" + str(kfold) + ".csv"
-            (smallestMAE, kfold, bestNNeighbor) = self.executeTrainPowerPlantKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
+            (smallestMAE, kfold, bestNNeighbor) = self.executeTrainKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
             lstRes.append((smallestMAE, kfold, bestNNeighbor))
         
         print ("indoor localization KNN results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
@@ -315,7 +315,7 @@ class clsregressionHw(object):
         lstRes = []
         for kfold in range(9, 20):
             fileTestOutputDT  = "../Predictions/IndoorLocalization/best_DT-competition" + str(kfold) + ".csv"
-            (smallestMAE, kfold, bestDepth) = self.executeTrainPowerPlantDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
+            (smallestMAE, kfold, bestDepth) = self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
             lstRes.append((smallestMAE, kfold, bestDepth))
         print ("indoor localization DT results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
 
