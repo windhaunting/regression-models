@@ -276,14 +276,15 @@ class clsregressionHw(object):
         trainY = dataPowerPlant[1]
         testX = dataPowerPlant[2]
         
-        plotExploreDataPreTrain(trainX, trainY)
+        #plotExploreDataPreTrain(trainX, trainY)            #plot train data
     
-        
         #trainX = preprocessNANMethod(trainX)           #not working
         #trainX = preprocessTransform(trainX)           #not working
         #trainX = preprocessNormalize(trainX)           #not working
         #trainX = preprocessStandardScaler(trainX)      #might work
         #dataPowerPlant = (trainX, trainY, testX)
+        
+        print ("begin kaggle competition power plant DT;  Question 5 ----")
         depthLst = range(1, 40)               #range(1, 40) try different alpha from test
         lstRes = []
         for kfold in range(3, 15):
@@ -304,23 +305,22 @@ class clsregressionHw(object):
     def predictDifferentModelsForIndoorLocalizationKaggleComp(self):
         dataIndoor = self.read_data_localization_indoors()
         
-        '''
         trainX = dataIndoor[0]
         trainY = dataIndoor[1]
         testX = dataIndoor[2]
         #trainX = preprocessStandardScaler(trainX)      #might work
         #dataIndoor = (trainX, trainY, testX)
-
-        knnNeighbors = range(1, 30)  
+        print ("begin kaggle competition indoor localization KNN;  Question 5 ----")
+        knnNeighbors = range(1, 40)  
         lstRes = []
-        for kfold in range(8, 20):
+        for kfold in range(3, 15):
             fileTestOutputKNN  = "../Predictions/IndoorLocalization/best_knn-competition" + str(kfold) + ".csv"
             (smallestMAE, kfold, bestNNeighbor) = self.executeTrainKNN(dataIndoor, kfold, knnNeighbors, fileTestOutputKNN)
             lstRes.append((smallestMAE, kfold, bestNNeighbor))
         
         print ("indoor localization KNN results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
+       
         '''
-        
         depthLst = range(1, 30)               #range(1, 20) try different alpha from test
         lstRes = []
         for kfold in range(9, 20):
@@ -328,6 +328,7 @@ class clsregressionHw(object):
             (smallestMAE, kfold, bestDepth) = self.executeTrainDT(dataIndoor, kfold, depthLst, fileTestOutputDT)
             lstRes.append((smallestMAE, kfold, bestDepth))
         print ("indoor localization DT results of different MAE and kfold: ", sorted(lstRes, key = lambda x: (x[0], x[1], x[2])))
+        '''
 
 
 ############################################################################
@@ -342,11 +343,11 @@ def main():
         
     #for kaggle competition power plant
     print (" -----begin for question 5 kaggle competition for power plant ---------")
-    regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
+    #regrHwObj.predictDifferentModelsForPowerPlantKaggleComp()
     
     #for kaggle competition indoor localization
     print (" -----begin for question 5 kaggle competition for Indoor localization ---------")
-    #regrHwObj.predictDifferentModelsForIndoorLocalizationKaggleComp()
+    regrHwObj.predictDifferentModelsForIndoorLocalizationKaggleComp()
     
     
 if __name__== "__main__":
